@@ -125,3 +125,23 @@ body{
     /* 调试时打开，确认位置后改回 transparent */
     background:rgba(255,0,0,0.3);
 }
+
+.page2-left-hit,
+.page2-right-hit{
+    position:absolute;
+    width:12%;
+    height:5%;
+    top:49%;
+    z-index:40;
+    background:rgba(255,0,0,0.3); /* 调试用 */
+}
+
+/* 左 */
+.page2-left-hit{
+    left:5%;
+}
+
+/* 右 */
+.page2-right-hit{
+    right:5%;
+}

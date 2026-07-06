@@ -1,12 +1,26 @@
+let currentIndex = 1;
+
+// 1. 获取 DOM
+
 const clickBoxes = document.querySelectorAll(".click-box");
 const page2 = document.getElementById("page2");
 const page2Back = document.getElementById("page2Back");
+const page2Left = document.getElementById("page2Left");
+const page2Right = document.getElementById("page2Right");
+
+// 2. 初始化状态（必须在DOM之后）
+page2.style.display = "none";
+page2Back.style.display = "none";
+page2Left.style.display = "none";
+page2Right.style.display = "none";
 
 // 点击 Page1 热区，进入 Page2
 clickBoxes.forEach(box => {
     box.addEventListener("click", () => {
         page2.style.display = "block";
         page2Back.style.display = "block";
+        page2Left.style.display = "block";
+        page2Right.style.display = "block";
     });
 });
 
@@ -14,4 +28,30 @@ clickBoxes.forEach(box => {
 page2Back.addEventListener("click", () => {
     page2.style.display = "none";
     page2Back.style.display = "none";
+    page2Left.style.display = "none";
+    page2Right.style.display = "none";
+    
+
+});
+
+// Step 3：左右切换逻辑
+
+page2Left.addEventListener("click", () => {
+    currentIndex--;
+
+    if (currentIndex < 1) {
+        currentIndex = 6;
+    }
+
+    console.log("当前盲盒：", currentIndex);
+});
+
+page2Right.addEventListener("click", () => {
+    currentIndex++;
+
+    if (currentIndex > 6) {
+        currentIndex = 1;
+    }
+
+    console.log("当前盲盒：", currentIndex);
 });
