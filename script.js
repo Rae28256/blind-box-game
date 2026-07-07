@@ -18,14 +18,20 @@ page2Left.style.display = "none";
 page2Right.style.display = "none";
 thumbnail.style.display = "none";
 
+const box = document.getElementById("box");
+
+box.style.display = "none";
+
 // 点击 Page1 热区，进入 Page2
-clickBoxes.forEach(box => {
-    box.addEventListener("click", () => {
+clickBoxes.forEach(clickBox => {
+    clickBox.addEventListener("click", () => {
         page2.style.display = "block";
         page2Back.style.display = "block";
         page2Left.style.display = "block";
         page2Right.style.display = "block";
         thumbnail.style.display = "block";
+
+        box.style.display = "block";
     });
 });
 
@@ -36,6 +42,8 @@ page2Back.addEventListener("click", () => {
     page2Left.style.display = "none";
     page2Right.style.display = "none";
     thumbnail.style.display = "none";
+
+    box.style.display = "none";
 
 });
 
@@ -65,9 +73,9 @@ page2Right.addEventListener("click", () => {
     console.log("当前盲盒：", currentIndex);
 });
 
-function updateThumbnail(){
+function updateThumbnail() {
 
-    thumbnail.src = 
-    "images/thumbnail_" + currentIndex + ".png";
+    thumbnail.src =
+        "images/thumbnail_" + currentIndex + ".png";
 
 }
