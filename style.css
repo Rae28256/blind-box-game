@@ -186,4 +186,6 @@ body{
 
     display:none;
 
+    transition:transform 0.4s ease;
+
 }

@@ -25,6 +25,13 @@ box.style.display = "none";
 // 点击 Page1 热区，进入 Page2
 clickBoxes.forEach(clickBox => {
     clickBox.addEventListener("click", () => {
+
+        // 获取当前点击的是第几个盲盒
+        currentIndex = Number(clickBox.dataset.id);
+
+        // 更新缩略图
+        updateThumbnail();
+
         page2.style.display = "block";
         page2Back.style.display = "block";
         page2Left.style.display = "block";
@@ -58,7 +65,8 @@ page2Left.addEventListener("click", () => {
 
     updateThumbnail();
 
-    console.log("当前盲盒：", currentIndex);
+    box.style.transform = "translateX(100%)";
+
 });
 
 page2Right.addEventListener("click", () => {
@@ -70,7 +78,9 @@ page2Right.addEventListener("click", () => {
 
     updateThumbnail();
 
-    console.log("当前盲盒：", currentIndex);
+    // box向左移动
+    box.style.transform = "translateX(-100%)";
+
 });
 
 function updateThumbnail() {
