@@ -22,7 +22,8 @@ body{
     height:812px;
 
     position:relative;
-    /*overflow:hidden*/
+
+    overflow:hidden;
 
     transform-origin:center center;
 
