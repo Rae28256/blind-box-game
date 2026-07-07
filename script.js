@@ -19,8 +19,11 @@ page2Right.style.display = "none";
 thumbnail.style.display = "none";
 
 const box = document.getElementById("box");
+const boxNext = document.getElementById("boxNext");
+
 
 box.style.display = "none";
+boxNext.style.display = "none";
 
 // 点击 Page1 热区，进入 Page2
 clickBoxes.forEach(clickBox => {
@@ -39,6 +42,7 @@ clickBoxes.forEach(clickBox => {
         thumbnail.style.display = "block";
 
         box.style.display = "block";
+        boxNext.style.display = "block";
     });
 });
 
@@ -51,6 +55,7 @@ page2Back.addEventListener("click", () => {
     thumbnail.style.display = "none";
 
     box.style.display = "none";
+
 
 });
 
@@ -65,8 +70,8 @@ page2Left.addEventListener("click", () => {
 
     updateThumbnail();
 
-    box.style.transform = "translateX(100%)";
-
+    // 下一个盲盒进入
+    boxNext.style.transform = "translateX(0)";
 });
 
 page2Right.addEventListener("click", () => {
@@ -78,8 +83,21 @@ page2Right.addEventListener("click", () => {
 
     updateThumbnail();
 
-    // box向左移动
-    box.style.transform = "translateX(-100%)";
+    // 先回到右侧
+    boxNext.style.transition = "none";
+    boxNext.style.transform = "translateX(100%)";
+
+
+    // 强制浏览器刷新状态
+    setTimeout(() => {
+
+        // 开启动画
+        boxNext.style.transition = "transform 0.4s ease";
+
+        // 滑入中心
+        boxNext.style.transform = "translateX(0)";
+
+    }, 20);
 
 });
 

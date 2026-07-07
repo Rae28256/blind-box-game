@@ -171,6 +171,7 @@ body{
    Page2 盲盒主体
 =========================== */
 
+/* 当前盲盒 */
 .box{
 
     position:absolute;
@@ -183,10 +184,24 @@ body{
 
     object-fit:contain;
 
-    z-index:40;
-
     display:none;
 
     transition:transform 0.4s ease;
+
+}
+
+
+#box{
+
+    z-index:40;
+
+}
+
+
+#boxNext{
+
+    z-index:35;
+
+    transform:translateX(100%);
 
 }
