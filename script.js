@@ -5,14 +5,18 @@ let currentIndex = 1;
 const clickBoxes = document.querySelectorAll(".click-box");
 const page2 = document.getElementById("page2");
 const page2Back = document.getElementById("page2Back");
+
 const page2Left = document.getElementById("page2Left");
 const page2Right = document.getElementById("page2Right");
+
+const thumbnail = document.getElementById("thumbnail");
 
 // 2. 初始化状态（必须在DOM之后）
 page2.style.display = "none";
 page2Back.style.display = "none";
 page2Left.style.display = "none";
 page2Right.style.display = "none";
+thumbnail.style.display = "none";
 
 // 点击 Page1 热区，进入 Page2
 clickBoxes.forEach(box => {
@@ -21,6 +25,7 @@ clickBoxes.forEach(box => {
         page2Back.style.display = "block";
         page2Left.style.display = "block";
         page2Right.style.display = "block";
+        thumbnail.style.display = "block";
     });
 });
 
@@ -30,7 +35,7 @@ page2Back.addEventListener("click", () => {
     page2Back.style.display = "none";
     page2Left.style.display = "none";
     page2Right.style.display = "none";
-    
+    thumbnail.style.display = "none";
 
 });
 
@@ -43,6 +48,8 @@ page2Left.addEventListener("click", () => {
         currentIndex = 6;
     }
 
+    updateThumbnail();
+
     console.log("当前盲盒：", currentIndex);
 });
 
@@ -53,5 +60,14 @@ page2Right.addEventListener("click", () => {
         currentIndex = 1;
     }
 
+    updateThumbnail();
+
     console.log("当前盲盒：", currentIndex);
 });
+
+function updateThumbnail(){
+
+    thumbnail.src = 
+    "images/thumbnail_" + currentIndex + ".png";
+
+}
