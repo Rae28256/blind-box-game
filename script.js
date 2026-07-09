@@ -55,6 +55,7 @@ page2Back.addEventListener("click", () => {
     thumbnail.style.display = "none";
 
     box.style.display = "none";
+    boxNext.style.display = "none";
 
 
 });
