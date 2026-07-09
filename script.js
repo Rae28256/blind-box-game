@@ -66,16 +66,25 @@ page2Back.addEventListener("click", () => {
 
 let isSliding = false;
 
+// 当前显示的box
+let activeBox = box;
 
-// 右切换
+// 等待进入的box
+let nextBox = boxNext;
+
+// ===========================
+// Step 3：左右切换动画
+// ===========================
+
+
 page2Right.addEventListener("click", () => {
+
 
     if (isSliding) return;
 
     isSliding = true;
 
 
-    // 下一编号
     let nextIndex = currentIndex + 1;
 
     if (nextIndex > 6) {
@@ -83,23 +92,35 @@ page2Right.addEventListener("click", () => {
     }
 
 
-    // 设置备用box初始位置（右侧）
-    boxNext.style.transition = "none";
-    boxNext.style.transform = "translateX(100%)";
+
+    // 新box放右侧
+
+    nextBox.style.transition = "none";
+    nextBox.style.transform = "translateX(100%)";
 
 
-    // 强制刷新
-    boxNext.offsetWidth;
+    nextBox.offsetWidth;
 
 
-    // 开启动画
-    box.style.transition = "transform 0.4s ease";
-    boxNext.style.transition = "transform 0.4s ease";
+
+    activeBox.style.transition =
+        "transform 0.4s ease";
+
+    nextBox.style.transition =
+        "transform 0.4s ease";
 
 
-    // 两个box同时移动
-    box.style.transform = "translateX(-100%)";
-    boxNext.style.transform = "translateX(0)";
+
+    // 同时移动
+
+    activeBox.style.transform =
+        "translateX(-100%)";
+
+
+    nextBox.style.transform =
+        "translateX(0)";
+
+
 
 
     setTimeout(() => {
@@ -110,20 +131,34 @@ page2Right.addEventListener("click", () => {
         updateThumbnail();
 
 
-        // 交换两个box的位置状态
 
-        box.src = boxNext.src;
+        // 交换角色
+
+        let temp = activeBox;
+
+        activeBox = nextBox;
+
+        nextBox = temp;
 
 
-        box.style.transition = "none";
-        box.style.transform = "translateX(0)";
+
+        // 重置备用box
+
+        nextBox.style.transition = "none";
+
+        nextBox.style.transform =
+            "translateX(100%)";
 
 
-        boxNext.style.transition = "none";
-        boxNext.style.transform = "translateX(100%)";
+        activeBox.style.transition = "none";
+
+        activeBox.style.transform =
+            "translateX(0)";
+
 
 
         isSliding = false;
+
 
 
     }, 400);
@@ -134,7 +169,7 @@ page2Right.addEventListener("click", () => {
 
 
 
-// 左切换
+
 page2Left.addEventListener("click", () => {
 
 
@@ -144,7 +179,6 @@ page2Left.addEventListener("click", () => {
 
 
 
-    // 上一个编号
     let nextIndex = currentIndex - 1;
 
 
@@ -154,27 +188,42 @@ page2Left.addEventListener("click", () => {
 
 
 
-    // 备用box放左边
 
-    boxNext.style.transition = "none";
-    boxNext.style.transform = "translateX(-100%)";
+    // 新box放左侧
 
+    nextBox.style.transition = "none";
 
-    boxNext.offsetWidth;
-
-
-
-    box.style.transition = "transform 0.4s ease";
-    boxNext.style.transition = "transform 0.4s ease";
+    nextBox.style.transform =
+        "translateX(-100%)";
 
 
 
-    // 当前向右出去
-    box.style.transform = "translateX(100%)";
+    nextBox.offsetWidth;
+
+
+
+
+    activeBox.style.transition =
+        "transform 0.4s ease";
+
+
+    nextBox.style.transition =
+        "transform 0.4s ease";
+
+
+
+    // 当前向右离开
+
+    activeBox.style.transform =
+        "translateX(100%)";
+
 
 
     // 新box进入
-    boxNext.style.transform = "translateX(0)";
+
+    nextBox.style.transform =
+        "translateX(0)";
+
 
 
 
@@ -186,26 +235,47 @@ page2Left.addEventListener("click", () => {
         updateThumbnail();
 
 
-        // 交换状态
 
-        box.src = boxNext.src;
+        // 交换角色
+
+        let temp = activeBox;
+
+        activeBox = nextBox;
+
+        nextBox = temp;
 
 
-        box.style.transition = "none";
-        box.style.transform = "translateX(0)";
+
+        // 重置备用box
+
+        nextBox.style.transition = "none";
+
+        nextBox.style.transform =
+            "translateX(-100%)";
 
 
-        boxNext.style.transition = "none";
-        boxNext.style.transform = "translateX(-100%)";
+
+        activeBox.style.transition = "none";
+
+        activeBox.style.transform =
+            "translateX(0)";
+
 
 
         isSliding = false;
 
 
+
     }, 400);
 
 
+
 });
+
+
+
+
+
 
 function updateThumbnail() {
 
