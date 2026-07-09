@@ -60,45 +60,150 @@ page2Back.addEventListener("click", () => {
 
 });
 
-// Step 3：左右切换逻辑
+// ===========================
+// Step 3：左右切换动画
+// ===========================
 
-page2Left.addEventListener("click", () => {
-    currentIndex--;
+let isSliding = false;
 
-    if (currentIndex < 1) {
-        currentIndex = 6;
-    }
 
-    updateThumbnail();
-
-    // 下一个盲盒进入
-    boxNext.style.transform = "translateX(0)";
-});
-
+// 右切换
 page2Right.addEventListener("click", () => {
-    currentIndex++;
 
-    if (currentIndex > 6) {
-        currentIndex = 1;
+    if (isSliding) return;
+
+    isSliding = true;
+
+
+    // 下一编号
+    let nextIndex = currentIndex + 1;
+
+    if (nextIndex > 6) {
+        nextIndex = 1;
     }
 
-    updateThumbnail();
 
-    // 先回到右侧
+    // 设置备用box初始位置（右侧）
     boxNext.style.transition = "none";
     boxNext.style.transform = "translateX(100%)";
 
 
-    // 强制浏览器刷新状态
+    // 强制刷新
+    boxNext.offsetWidth;
+
+
+    // 开启动画
+    box.style.transition = "transform 0.4s ease";
+    boxNext.style.transition = "transform 0.4s ease";
+
+
+    // 两个box同时移动
+    box.style.transform = "translateX(-100%)";
+    boxNext.style.transform = "translateX(0)";
+
+
     setTimeout(() => {
 
-        // 开启动画
-        boxNext.style.transition = "transform 0.4s ease";
 
-        // 滑入中心
-        boxNext.style.transform = "translateX(0)";
+        currentIndex = nextIndex;
 
-    }, 20);
+        updateThumbnail();
+
+
+        // 交换两个box的位置状态
+
+        box.src = boxNext.src;
+
+
+        box.style.transition = "none";
+        box.style.transform = "translateX(0)";
+
+
+        boxNext.style.transition = "none";
+        boxNext.style.transform = "translateX(100%)";
+
+
+        isSliding = false;
+
+
+    }, 400);
+
+
+});
+
+
+
+
+// 左切换
+page2Left.addEventListener("click", () => {
+
+
+    if (isSliding) return;
+
+    isSliding = true;
+
+
+
+    // 上一个编号
+    let nextIndex = currentIndex - 1;
+
+
+    if (nextIndex < 1) {
+        nextIndex = 6;
+    }
+
+
+
+    // 备用box放左边
+
+    boxNext.style.transition = "none";
+    boxNext.style.transform = "translateX(-100%)";
+
+
+    boxNext.offsetWidth;
+
+
+
+    box.style.transition = "transform 0.4s ease";
+    boxNext.style.transition = "transform 0.4s ease";
+
+
+
+    // 当前向右出去
+    box.style.transform = "translateX(100%)";
+
+
+    // 新box进入
+    boxNext.style.transform = "translateX(0)";
+
+
+
+    setTimeout(() => {
+
+
+        currentIndex = nextIndex;
+
+        updateThumbnail();
+
+
+        // 交换状态
+
+        box.src = boxNext.src;
+
+
+        box.style.transition = "none";
+        box.style.transform = "translateX(0)";
+
+
+        boxNext.style.transition = "none";
+        boxNext.style.transform = "translateX(-100%)";
+
+
+        isSliding = false;
+
+
+    }, 400);
+
 
 });
 
