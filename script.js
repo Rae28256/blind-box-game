@@ -11,12 +11,19 @@ const page2Right = document.getElementById("page2Right");
 
 const thumbnail = document.getElementById("thumbnail");
 
+const arrowLeft = document.getElementById("arrowLeft");
+const arrowRight = document.getElementById("arrowRight");
+
 // 2. 初始化状态（必须在DOM之后）
 page2.style.display = "none";
 page2Back.style.display = "none";
 page2Left.style.display = "none";
 page2Right.style.display = "none";
 thumbnail.style.display = "none";
+
+arrowLeft.style.display = "none";
+arrowRight.style.display = "none";
+
 
 const box = document.getElementById("box");
 const boxNext = document.getElementById("boxNext");
@@ -39,10 +46,16 @@ clickBoxes.forEach(clickBox => {
         page2Back.style.display = "block";
         page2Left.style.display = "block";
         page2Right.style.display = "block";
+
         thumbnail.style.display = "block";
 
         box.style.display = "block";
         boxNext.style.display = "block";
+
+        arrowLeft.style.display = "block";
+        arrowRight.style.display = "block";
+
+
     });
 });
 
@@ -56,6 +69,9 @@ page2Back.addEventListener("click", () => {
 
     box.style.display = "none";
     boxNext.style.display = "none";
+
+    arrowLeft.style.display = "none";
+    arrowRight.style.display = "none";
 
 
 });
@@ -79,6 +95,8 @@ let nextBox = boxNext;
 
 page2Right.addEventListener("click", () => {
 
+
+    buttonFeedback(arrowRight);
 
     if (isSliding) return;
 
@@ -173,6 +191,8 @@ page2Right.addEventListener("click", () => {
 page2Left.addEventListener("click", () => {
 
 
+    buttonFeedback(arrowLeft);
+    
     if (isSliding) return;
 
     isSliding = true;
@@ -281,5 +301,25 @@ function updateThumbnail() {
 
     thumbnail.src =
         "images/thumbnail_" + currentIndex + ".png";
+
+}
+
+function buttonFeedback(button){
+
+    button.classList.remove("button-active");
+
+
+    // 强制刷新动画状态
+    button.offsetWidth;
+
+
+    button.classList.add("button-active");
+
+
+    setTimeout(()=>{
+
+        button.classList.remove("button-active");
+
+    },300);
 
 }
