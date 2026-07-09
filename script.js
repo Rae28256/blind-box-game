@@ -14,6 +14,11 @@ const thumbnail = document.getElementById("thumbnail");
 const arrowLeft = document.getElementById("arrowLeft");
 const arrowRight = document.getElementById("arrowRight");
 
+const buyButton = document.getElementById("buyButton");
+const buyHit = document.getElementById("buyHit");
+
+const page3 = document.getElementById("page3");
+
 // 2. 初始化状态（必须在DOM之后）
 page2.style.display = "none";
 page2Back.style.display = "none";
@@ -23,6 +28,12 @@ thumbnail.style.display = "none";
 
 arrowLeft.style.display = "none";
 arrowRight.style.display = "none";
+
+buyButton.style.display = "none";
+
+buyHit.style.display = "none";
+
+page3.style.display = "none";
 
 
 const box = document.getElementById("box");
@@ -55,6 +66,10 @@ clickBoxes.forEach(clickBox => {
         arrowLeft.style.display = "block";
         arrowRight.style.display = "block";
 
+        buyButton.style.display = "block";
+
+        buyHit.style.display = "block";
+
 
     });
 });
@@ -72,6 +87,10 @@ page2Back.addEventListener("click", () => {
 
     arrowLeft.style.display = "none";
     arrowRight.style.display = "none";
+
+    buyButton.style.display = "none";
+
+    buyHit.style.display = "none";
 
 
 });
@@ -192,7 +211,7 @@ page2Left.addEventListener("click", () => {
 
 
     buttonFeedback(arrowLeft);
-    
+
     if (isSliding) return;
 
     isSliding = true;
@@ -293,7 +312,57 @@ page2Left.addEventListener("click", () => {
 });
 
 
+// ===========================
+// Page2 购入 → Page3
+// ===========================
 
+buyHit.addEventListener("click",()=>{
+
+
+    // 按钮反馈
+
+    buttonFeedback(buyButton);
+
+
+
+    // 等待动画结束
+
+    setTimeout(()=>{
+
+
+        // 隐藏Page2
+
+        page2.style.display="none";
+
+        page2Back.style.display="none";
+        page2Left.style.display="none";
+        page2Right.style.display="none";
+
+
+        thumbnail.style.display="none";
+
+        box.style.display="none";
+        boxNext.style.display="none";
+
+
+        arrowLeft.style.display="none";
+        arrowRight.style.display="none";
+
+        buyButton.style.display="none";
+
+        buyHit.style.display="none";
+
+
+
+        // 显示Page3
+
+        page3.style.display="block";
+
+
+    },600);
+
+
+});
 
 
 
@@ -304,7 +373,7 @@ function updateThumbnail() {
 
 }
 
-function buttonFeedback(button){
+function buttonFeedback(button) {
 
     button.classList.remove("button-active");
 
@@ -316,10 +385,10 @@ function buttonFeedback(button){
     button.classList.add("button-active");
 
 
-    setTimeout(()=>{
+    setTimeout(() => {
 
         button.classList.remove("button-active");
 
-    },300);
+    }, 300);
 
 }
