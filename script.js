@@ -138,6 +138,13 @@ page2Right.addEventListener("click", () => {
 
     if (isSliding) return;
 
+    // 右切换开始前恢复默认位置
+    boxMotionLocked = true;
+
+    resetBoxMotion();
+
+    lastMotionGamma = null;
+
     isSliding = true;
 
 
@@ -215,6 +222,10 @@ page2Right.addEventListener("click", () => {
 
         isSliding = false;
 
+        // 右切换结束后恢复手机晃动
+        boxMotionLocked = false;
+
+        lastMotionGamma = null;
 
 
     }, 400);
@@ -234,6 +245,13 @@ page2Left.addEventListener("click", () => {
     buttonFeedback(arrowLeft);
 
     if (isSliding) return;
+
+    // 左切换开始前恢复默认位置
+    boxMotionLocked = true;
+
+    resetBoxMotion();
+
+    lastMotionGamma = null;
 
     isSliding = true;
 
@@ -323,6 +341,11 @@ page2Left.addEventListener("click", () => {
 
 
         isSliding = false;
+
+        // 左切换结束后恢复手机晃动
+        boxMotionLocked = false;
+
+        lastMotionGamma = null;
 
 
 
@@ -507,6 +530,47 @@ function playTapSound() {
 let motionStartBeta = null;
 let motionStartGamma = null;
 
+// 记录上一次手机水平角度
+let lastMotionGamma = null;
+
+
+// 停止晃动后的回正计时器
+let motionReturnTimer = null;
+
+
+// 左右轮播时暂停手机晃动
+let boxMotionLocked = false;
+
+
+// 让Box立即恢复默认位置
+function resetBoxMotion() {
+
+    clearTimeout(
+        motionReturnTimer
+    );
+
+
+    boxMotion.style.transform =
+        "translate3d(0, 0, 0) rotate(0deg)";
+
+
+    // 停止快速甩动回弹动画
+    const shakeAnimations =
+        boxShake.getAnimations();
+
+
+    shakeAnimations.forEach(animation => {
+
+        animation.cancel();
+
+    });
+
+
+    boxShake.style.transform =
+        "translate3d(0, 0, 0) rotate(0deg)";
+
+}
+
 
 function limitMotionValue(value, min, max) {
 
@@ -524,10 +588,10 @@ function handleBoxOrientation(event) {
     if (page2.style.display !== "block") return;
 
 
-    // 没有获取到手机方向数据时不运行
+    // 左右轮播期间暂停手机晃动
     if (
-        event.beta === null ||
-        event.gamma === null
+        boxMotionLocked ||
+        isSliding
     ) {
 
         return;
@@ -535,52 +599,82 @@ function handleBoxOrientation(event) {
     }
 
 
-    // 第一次获取数据时记录手机初始角度
-    if (
-        motionStartBeta === null ||
-        motionStartGamma === null
-    ) {
+    // 没有获取到水平角度时不运行
+    if (event.gamma === null) return;
 
-        motionStartBeta = event.beta;
-        motionStartGamma = event.gamma;
+
+    // 第一次获取时只记录角度
+    if (lastMotionGamma === null) {
+
+        lastMotionGamma =
+            event.gamma;
 
         return;
 
     }
 
 
-    // 计算手机与初始位置的角度差
-    const betaDifference =
+    // 计算手机本次左右移动的角度变化
+    const gammaMovement =
+        event.gamma - lastMotionGamma;
+
+
+    // 保存当前角度，供下一次比较
+    lastMotionGamma =
+        event.gamma;
+
+
+    // 过滤传感器的轻微抖动
+    if (
+        Math.abs(gammaMovement) < 0.25
+    ) {
+
+        return;
+
+    }
+
+
+    // 水平最大移动40px
+    const moveX =
         limitMotionValue(
-            event.beta - motionStartBeta,
-            -20,
-            20
+            gammaMovement * 18,
+            -40,
+            40
         );
 
 
-    const gammaDifference =
-        limitMotionValue(
-            event.gamma - motionStartGamma,
-            -20,
-            20
-        );
-
-
-    // 最大上下移动40px
+    // 不进行上下移动
     const moveY = 0;
 
-    // 最大左右移动40px
-    const moveX =
-        gammaDifference / 20 * 40;
 
-
-    // 最大旋转7度
+    // 根据水平移动产生小幅度旋转
     const rotate =
-        gammaDifference / 20 * 7;
+        limitMotionValue(
+            moveX / 40 * 4,
+            -4,
+            4
+        );
 
 
+    // 立即更新Box位置
     boxMotion.style.transform =
         `translate3d(${moveX}px, ${moveY}px, 0) rotate(${rotate}deg)`;
+
+
+    // 每次检测到明显晃动时重新计算回正时间
+    clearTimeout(
+        motionReturnTimer
+    );
+
+
+    motionReturnTimer =
+        setTimeout(() => {
+
+            motionReturnTimer = null;
+
+            resetBoxMotion();
+
+        }, 150);
 
 }
 
