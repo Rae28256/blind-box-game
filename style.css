@@ -214,6 +214,23 @@ body {
 
 }
 
+/* 盲盒快速甩动容器 */
+.box-shake {
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+
+    pointer-events: none;
+
+    transform-origin: center center;
+
+}
+
 /* 当前盲盒 */
 .box {
 

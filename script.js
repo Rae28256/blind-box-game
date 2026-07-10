@@ -39,6 +39,7 @@ page3.style.display = "none";
 const box = document.getElementById("box");
 const boxNext = document.getElementById("boxNext");
 const boxMotion = document.getElementById("boxMotion");
+const boxShake = document.getElementById("boxShake");
 
 
 box.style.display = "none";
@@ -565,19 +566,19 @@ function handleBoxOrientation(event) {
         );
 
 
-    // 最大上下移动12px
+    // 最大上下移动40px
     const moveY =
-        betaDifference / 20 * 12;
+        betaDifference / 20 * 40;
 
 
-    // 最大左右移动12px
+    // 最大左右移动40px
     const moveX =
-        gammaDifference / 20 * 12;
+        gammaDifference / 20 * 40;
 
 
-    // 最大旋转2度
+    // 最大旋转7度
     const rotate =
-        gammaDifference / 20 * 2;
+        gammaDifference / 20 * 7;
 
 
     boxMotion.style.transform =
@@ -648,5 +649,78 @@ async function enableBoxOrientation() {
 
 
     orientationListening = true;
+
+}
+
+// ===========================
+// 盲盒快速甩动回弹动画
+// ===========================
+
+function playBoxShakeAnimation(
+    shakeX,
+    shakeY
+) {
+
+    // 限制最大旋转角度
+    const shakeRotate =
+        limitMotionValue(
+            shakeX / 8,
+            -6,
+            6
+        );
+
+
+    // 停止上一次尚未结束的回弹动画
+    const runningAnimations =
+        boxShake.getAnimations();
+
+
+    runningAnimations.forEach(animation => {
+
+        animation.cancel();
+
+    });
+
+
+    // 播放新的甩动回弹动画
+    boxShake.animate(
+        [
+
+            {
+                transform:
+                    "translate3d(0, 0, 0) rotate(0deg)"
+            },
+
+            {
+                offset: 0.35,
+
+                transform:
+                    `translate3d(${shakeX}px, ${shakeY}px, 0) rotate(${shakeRotate}deg)`
+            },
+
+            {
+                offset: 0.65,
+
+                transform:
+                    `translate3d(${-shakeX * 0.3}px, ${-shakeY * 0.3}px, 0) rotate(${-shakeRotate * 0.35}deg)`
+            },
+
+            {
+                transform:
+                    "translate3d(0, 0, 0) rotate(0deg)"
+            }
+
+        ],
+        {
+
+            duration: 420,
+
+            easing:
+                "cubic-bezier(0.22, 0.8, 0.3, 1)",
+
+            fill: "none"
+
+        }
+    );
 
 }
