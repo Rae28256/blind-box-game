@@ -38,6 +38,7 @@ page3.style.display = "none";
 
 const box = document.getElementById("box");
 const boxNext = document.getElementById("boxNext");
+const boxMotion = document.getElementById("boxMotion");
 
 
 box.style.display = "none";
@@ -48,6 +49,18 @@ clickBoxes.forEach(clickBox => {
     clickBox.addEventListener("click", () => {
         // Page1盲盒点击音效
         playTapSound();
+
+        // 开启手机方向监听
+        enableBoxOrientation();
+
+
+        // 获取当前点击的是第几个盲盒
+        currentIndex = Number(clickBox.dataset.id);
+
+        // 更新缩略图
+        updateThumbnail();
+
+        page2.style.display = "block";
 
 
         // 获取当前点击的是第几个盲盒
@@ -483,5 +496,157 @@ function playTapSound() {
     oscillator.stop(
         tapAudioContext.currentTime + 0.1
     );
+
+}
+
+// ===========================
+// Page2盲盒手机跟随计算
+// ===========================
+
+let motionStartBeta = null;
+let motionStartGamma = null;
+
+
+function limitMotionValue(value, min, max) {
+
+    return Math.max(
+        min,
+        Math.min(max, value)
+    );
+
+}
+
+
+function handleBoxOrientation(event) {
+
+    // 只在Page2运行
+    if (page2.style.display !== "block") return;
+
+
+    // 没有获取到手机方向数据时不运行
+    if (
+        event.beta === null ||
+        event.gamma === null
+    ) {
+
+        return;
+
+    }
+
+
+    // 第一次获取数据时记录手机初始角度
+    if (
+        motionStartBeta === null ||
+        motionStartGamma === null
+    ) {
+
+        motionStartBeta = event.beta;
+        motionStartGamma = event.gamma;
+
+        return;
+
+    }
+
+
+    // 计算手机与初始位置的角度差
+    const betaDifference =
+        limitMotionValue(
+            event.beta - motionStartBeta,
+            -20,
+            20
+        );
+
+
+    const gammaDifference =
+        limitMotionValue(
+            event.gamma - motionStartGamma,
+            -20,
+            20
+        );
+
+
+    // 最大上下移动12px
+    const moveY =
+        betaDifference / 20 * 12;
+
+
+    // 最大左右移动12px
+    const moveX =
+        gammaDifference / 20 * 12;
+
+
+    // 最大旋转2度
+    const rotate =
+        gammaDifference / 20 * 2;
+
+
+    boxMotion.style.transform =
+        `translate3d(${moveX}px, ${moveY}px, 0) rotate(${rotate}deg)`;
+
+}
+
+// 手机方向监听是否已经开启
+let orientationListening = false;
+
+
+async function enableBoxOrientation() {
+
+    // 防止重复添加监听
+    if (orientationListening) return;
+
+
+    // 当前设备不支持手机方向数据
+    if (!("DeviceOrientationEvent" in window)) {
+
+        return;
+
+    }
+
+
+    const OrientationEvent =
+        window.DeviceOrientationEvent;
+
+
+    // iPhone和iPad需要用户授权
+    if (
+        typeof OrientationEvent.requestPermission ===
+        "function"
+    ) {
+
+        try {
+
+            const permission =
+                await OrientationEvent.requestPermission();
+
+
+            if (permission !== "granted") {
+
+                return;
+
+            }
+
+        } catch (error) {
+
+            console.log(
+                "手机方向权限申请失败",
+                error
+            );
+
+            return;
+
+        }
+
+    }
+
+
+    // 安卓通常会直接执行到这里
+    window.addEventListener(
+        "deviceorientation",
+        handleBoxOrientation,
+        true
+    );
+
+
+    orientationListening = true;
 
 }
