@@ -389,6 +389,6 @@ function buttonFeedback(button) {
 
         button.classList.remove("button-active");
 
-    }, 300);
+    }, 250);
 
 }
