@@ -567,9 +567,7 @@ function handleBoxOrientation(event) {
 
 
     // 最大上下移动40px
-    const moveY =
-        betaDifference / 20 * 40;
-
+    const moveY = 0;
 
     // 最大左右移动40px
     const moveX =

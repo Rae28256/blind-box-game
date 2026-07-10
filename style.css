@@ -212,6 +212,8 @@ body {
 
     transform-origin: center center;
 
+    will-change: transform;
+
 }
 
 /* 盲盒快速甩动容器 */
