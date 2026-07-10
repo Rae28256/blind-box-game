@@ -212,6 +212,9 @@ body {
 
     transform-origin: center center;
 
+    /* 手机方向数据之间的短暂补帧 */
+    transition: transform 0.06s linear;
+
     will-change: transform;
 
 }

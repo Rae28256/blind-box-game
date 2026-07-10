@@ -603,10 +603,13 @@ function handleBoxOrientation(event) {
     if (event.gamma === null) return;
 
 
-    // 第一次获取时只记录角度
+    // 第一次获取方向数据时设置起始位置
     if (lastMotionGamma === null) {
 
         lastMotionGamma =
+            event.gamma;
+
+        motionStartGamma =
             event.gamma;
 
         return;
@@ -614,19 +617,19 @@ function handleBoxOrientation(event) {
     }
 
 
-    // 计算手机本次左右移动的角度变化
+    // 相邻两次数据的角度变化
+    // 只用于判断手机是否还在晃动
     const gammaMovement =
         event.gamma - lastMotionGamma;
 
 
-    // 保存当前角度，供下一次比较
     lastMotionGamma =
         event.gamma;
 
 
-    // 过滤传感器的轻微抖动
+    // 过滤非常轻微的传感器噪声
     if (
-        Math.abs(gammaMovement) < 0.25
+        Math.abs(gammaMovement) < 0.08
     ) {
 
         return;
@@ -634,34 +637,34 @@ function handleBoxOrientation(event) {
     }
 
 
-    // 水平最大移动40px
-    const moveX =
+    // 当前角度与本次起始角度之间的差值
+    const gammaDifference =
         limitMotionValue(
-            gammaMovement * 18,
-            -40,
-            40
+            event.gamma - motionStartGamma,
+            -12,
+            12
         );
+
+
+    // 最大水平移动40px
+    const moveX =
+        gammaDifference / 12 * 40;
 
 
     // 不进行上下移动
     const moveY = 0;
 
 
-    // 根据水平移动产生小幅度旋转
+    // 根据水平位置产生小幅度旋转
     const rotate =
-        limitMotionValue(
-            moveX / 40 * 4,
-            -4,
-            4
-        );
+        moveX / 40 * 4;
 
 
-    // 立即更新Box位置
     boxMotion.style.transform =
         `translate3d(${moveX}px, ${moveY}px, 0) rotate(${rotate}deg)`;
 
 
-    // 每次检测到明显晃动时重新计算回正时间
+    // 检测到新晃动时，重新计算停止时间
     clearTimeout(
         motionReturnTimer
     );
@@ -672,6 +675,13 @@ function handleBoxOrientation(event) {
 
             motionReturnTimer = null;
 
+
+            // 当前停止角度成为下一次晃动的新起点
+            motionStartGamma =
+                lastMotionGamma;
+
+
+            // 回到画面中央
             resetBoxMotion();
 
         }, 150);
