@@ -46,6 +46,9 @@ boxNext.style.display = "none";
 // 点击 Page1 热区，进入 Page2
 clickBoxes.forEach(clickBox => {
     clickBox.addEventListener("click", () => {
+        // Page1盲盒点击音效
+        playTapSound();
+
 
         // 获取当前点击的是第几个盲盒
         currentIndex = Number(clickBox.dataset.id);
@@ -114,6 +117,8 @@ let nextBox = boxNext;
 
 page2Right.addEventListener("click", () => {
 
+    // 右按钮声音
+    playTapSound();
 
     buttonFeedback(arrowRight);
 
@@ -209,6 +214,8 @@ page2Right.addEventListener("click", () => {
 
 page2Left.addEventListener("click", () => {
 
+    // 左按钮点击音效
+    playTapSound();
 
     buttonFeedback(arrowLeft);
 
@@ -316,7 +323,11 @@ page2Left.addEventListener("click", () => {
 // Page2 购入 → Page3
 // ===========================
 
-buyHit.addEventListener("click",()=>{
+buyHit.addEventListener("click", () => {
+
+    // 购入按钮点击音效
+
+    playTapSound();
 
 
     // 按钮反馈
@@ -327,39 +338,39 @@ buyHit.addEventListener("click",()=>{
 
     // 等待动画结束
 
-    setTimeout(()=>{
+    setTimeout(() => {
 
 
         // 隐藏Page2
 
-        page2.style.display="none";
+        page2.style.display = "none";
 
-        page2Back.style.display="none";
-        page2Left.style.display="none";
-        page2Right.style.display="none";
-
-
-        thumbnail.style.display="none";
-
-        box.style.display="none";
-        boxNext.style.display="none";
+        page2Back.style.display = "none";
+        page2Left.style.display = "none";
+        page2Right.style.display = "none";
 
 
-        arrowLeft.style.display="none";
-        arrowRight.style.display="none";
+        thumbnail.style.display = "none";
 
-        buyButton.style.display="none";
+        box.style.display = "none";
+        boxNext.style.display = "none";
 
-        buyHit.style.display="none";
+
+        arrowLeft.style.display = "none";
+        arrowRight.style.display = "none";
+
+        buyButton.style.display = "none";
+
+        buyHit.style.display = "none";
 
 
 
         // 显示Page3
 
-        page3.style.display="block";
+        page3.style.display = "block";
 
 
-    },600);
+    }, 500);
 
 
 });
@@ -390,5 +401,87 @@ function buttonFeedback(button) {
         button.classList.remove("button-active");
 
     }, 250);
+
+}
+
+// ===========================
+// 按钮声音
+// ===========================
+
+let tapAudioContext = null;
+
+
+function playTapSound() {
+
+    const AudioContextClass =
+        window.AudioContext ||
+        window.webkitAudioContext;
+
+
+    if (!AudioContextClass) return;
+
+
+    if (!tapAudioContext) {
+
+        tapAudioContext =
+            new AudioContextClass();
+
+    }
+
+
+    if (tapAudioContext.state === "suspended") {
+
+        tapAudioContext.resume();
+
+    }
+
+
+    const oscillator =
+        tapAudioContext.createOscillator();
+
+
+    const gainNode =
+        tapAudioContext.createGain();
+
+
+    oscillator.type = "triangle";
+
+
+    oscillator.frequency.setValueAtTime(
+        500,
+        tapAudioContext.currentTime
+    );
+
+
+    oscillator.frequency.exponentialRampToValueAtTime(
+        750,
+        tapAudioContext.currentTime + 0.09
+    );
+
+
+    gainNode.gain.setValueAtTime(
+        0.18,
+        tapAudioContext.currentTime
+    );
+
+
+    gainNode.gain.exponentialRampToValueAtTime(
+        0.001,
+        tapAudioContext.currentTime + 0.1
+    );
+
+
+    oscillator.connect(gainNode);
+
+    gainNode.connect(
+        tapAudioContext.destination
+    );
+
+
+    oscillator.start();
+
+    oscillator.stop(
+        tapAudioContext.currentTime + 0.1
+    );
 
 }
