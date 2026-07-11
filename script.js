@@ -1402,22 +1402,25 @@ page3.addEventListener(
             ) /
             pathLengthSquared;
 
-
-        // 根据按下时的原位置更新手部进度
-        page3HandProgress =
-            page3HandProgressAtPointerDown +
-            progressChange;
-
-
-        // 限制进度不能超过起点和终点
-        page3HandProgress =
+        // 计算鼠标本次移动后可能到达的进度
+        const nextPage3HandProgress =
             Math.max(
                 0,
                 Math.min(
                     1,
-                    page3HandProgress
+                    page3HandProgressAtPointerDown +
+                    progressChange
                 )
             );
+
+
+        // 手部只能前进，不能向后退
+        page3HandProgress =
+            Math.max(
+                page3HandProgress,
+                nextPage3HandProgress
+            );
+
 
         // 根据当前进度计算手部移动距离
         const page3HandMoveX =
@@ -1446,6 +1449,66 @@ page3.addEventListener(
 
         // 结束当前拖动
         isPage3Dragging = false;
+
+        // 本次拖动没有达到40px时
+        // 手部返回本次按下之前的位置
+        if (!page3HasValidDrag) {
+
+            page3HandProgress =
+                page3HandProgressAtPointerDown;
+
+
+            const returnHandX =
+                page3HandPathMoveX *
+                page3HandProgress;
+
+
+            const returnHandY =
+                page3HandPathMoveY *
+                page3HandProgress;
+
+
+            // 记录回位前的当前位置
+            const currentHandTransform =
+                page3Hand.style.transform ||
+                "translate3d(0, 0, 0)";
+
+
+            // 计算回位后的状态
+            const returnHandTransform =
+                `translate3d(${returnHandX}px, ${returnHandY}px, 0)`;
+
+
+            // 最终位置设置为回位位置
+            page3Hand.style.transform =
+                returnHandTransform;
+
+
+            // 播放短暂回位动画
+            page3Hand.animate(
+                [
+
+                    {
+                        transform:
+                            currentHandTransform
+                    },
+
+                    {
+                        transform:
+                            returnHandTransform
+                    }
+
+                ],
+                {
+
+                    duration: 150,
+
+                    easing: "ease-out"
+
+                }
+            );
+
+        }
 
 
         // 本次没有发生有效拖动，
