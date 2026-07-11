@@ -420,6 +420,8 @@ body {
     display: none;
 
     z-index: 60;
+    /* 防止手机浏览器将拖动识别为页面滚动 */
+    touch-action: none;
 
 }
 
@@ -466,7 +468,7 @@ body {
     transform-origin: center center;
 
     animation:
-    page3ArrowMove 1.2s ease-in-out infinite alternate;
+        page3ArrowMove 1.2s ease-in-out infinite alternate;
 
 }
 
