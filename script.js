@@ -18,6 +18,46 @@ const buyButton = document.getElementById("buyButton");
 const buyHit = document.getElementById("buyHit");
 
 const page3 = document.getElementById("page3");
+const page3Hand = document.getElementById("page3Hand");
+
+// Page3鼠标是否正在按住拖动，松开后变回false
+let isPage3Dragging = false;
+// Page3是否已经开始过拖动，后续用于让粉色箭头在第一次拖动后保持隐藏
+let page3HasStartedDragging = false;
+// Page3鼠标按下时的横向位置
+let page3PointerStartX = 0;
+// Page3鼠标按下时的纵向位置
+let page3PointerStartY = 0;
+// 本次操作是否达到有效拖动距离
+let page3HasValidDrag = false;
+
+// Page3手部指尖轨迹起点
+const page3HandPathStartX = 58;
+const page3HandPathStartY = 358;
+
+
+// Page3手部指尖轨迹终点
+const page3HandPathEndX = 280;
+const page3HandPathEndY = 438;
+
+
+// Page3手部完整轨迹移动量
+const page3HandPathMoveX =
+    page3HandPathEndX -
+    page3HandPathStartX;
+
+
+const page3HandPathMoveY =
+    page3HandPathEndY -
+    page3HandPathStartY;
+
+// Page3手部当前所在的轨迹进度
+// 0代表起点，1代表终点
+let page3HandProgress = 0;
+
+
+// 鼠标按下时，手部原来的轨迹进度
+let page3HandProgressAtPointerDown = 0;
 
 // 2. 初始化状态（必须在DOM之后）
 page2.style.display = "none";
@@ -403,8 +443,13 @@ buyHit.addEventListener("click", () => {
 
 
         // 显示Page3
-
         page3.style.display = "block";
+        // 显示Page3放大盲盒
+        document.getElementById("page3Box").style.display = "block";
+        // 显示Page3粉色箭头
+        document.getElementById("page3Arrow").style.display = "block";
+        // 显示Page3手部图标
+        document.getElementById("page3Hand").style.display = "block";
 
 
     }, 500);
@@ -1223,3 +1268,217 @@ function playBoxShakeAnimation(
     );
 
 }
+
+// ===========================
+// Page3鼠标按下
+// ===========================
+
+page3.addEventListener(
+    "pointerdown",
+    event => {
+
+        // 电脑端只响应鼠标左键
+        if (
+            event.pointerType === "mouse" &&
+            event.button !== 0
+        ) {
+
+            return;
+
+        }
+
+
+        event.preventDefault();
+
+
+        // 记录正在拖动
+        isPage3Dragging = true;
+
+        // 记录鼠标按下的位置
+        page3PointerStartX =
+            event.clientX;
+
+        page3PointerStartY =
+            event.clientY;
+
+        // 记录鼠标按下时手部已有的轨迹进度
+        page3HandProgressAtPointerDown =
+            page3HandProgress;
+
+
+        // 每次按下时，先视为没有发生有效拖动
+        page3HasValidDrag = false;
+
+
+        // 第一次拖动后隐藏粉色箭头
+        document.getElementById(
+            "page3Arrow"
+        ).style.display = "none";
+
+
+        // 持续接收当前鼠标或手指的移动事件
+        page3.setPointerCapture(
+            event.pointerId
+        );
+
+    }
+);
+
+// ===========================
+// Page3鼠标移动距离判断
+// ===========================
+
+page3.addEventListener(
+    "pointermove",
+    event => {
+
+        // 没有按住鼠标时不执行
+        if (!isPage3Dragging) {
+
+            return;
+
+        }
+
+
+        // 计算鼠标距离按下位置的移动量
+        const moveDistanceX =
+            event.clientX -
+            page3PointerStartX;
+
+
+        const moveDistanceY =
+            event.clientY -
+            page3PointerStartY;
+
+
+        // 计算实际移动距离
+        const totalMoveDistance =
+            Math.hypot(
+                moveDistanceX,
+                moveDistanceY
+            );
+
+
+        // 移动达到40px后，判定为有效拖动
+        if (totalMoveDistance >= 40) {
+
+            page3HasValidDrag = true;
+
+            page3HasStartedDragging = true;
+
+        }
+
+        // 获取Page3在当前电脑窗口中的实际尺寸
+        const page3Rect =
+            page3.getBoundingClientRect();
+
+
+        // 将电脑屏幕中的鼠标移动量
+        // 转换为375×812设计稿中的移动量
+        const designMoveX =
+            moveDistanceX *
+            (375 / page3Rect.width);
+
+
+        const designMoveY =
+            moveDistanceY *
+            (812 / page3Rect.height);
+
+
+        // 计算鼠标移动在斜向轨迹上的投影
+        const pathLengthSquared =
+            page3HandPathMoveX *
+            page3HandPathMoveX +
+            page3HandPathMoveY *
+            page3HandPathMoveY;
+
+
+        const progressChange =
+            (
+                designMoveX *
+                page3HandPathMoveX +
+                designMoveY *
+                page3HandPathMoveY
+            ) /
+            pathLengthSquared;
+
+
+        // 根据按下时的原位置更新手部进度
+        page3HandProgress =
+            page3HandProgressAtPointerDown +
+            progressChange;
+
+
+        // 限制进度不能超过起点和终点
+        page3HandProgress =
+            Math.max(
+                0,
+                Math.min(
+                    1,
+                    page3HandProgress
+                )
+            );
+
+        // 根据当前进度计算手部移动距离
+        const page3HandMoveX =
+            page3HandPathMoveX *
+            page3HandProgress;
+
+
+        const page3HandMoveY =
+            page3HandPathMoveY *
+            page3HandProgress;
+
+
+        // 让手部只沿设定的斜向轨迹移动
+        page3Hand.style.transform =
+            `translate3d(${page3HandMoveX}px, ${page3HandMoveY}px, 0)`;
+    }
+);
+
+// ===========================
+// Page3鼠标松开
+// ===========================
+
+page3.addEventListener(
+    "pointerup",
+    event => {
+
+        // 结束当前拖动
+        isPage3Dragging = false;
+
+
+        // 本次没有发生有效拖动，
+        // 并且用户此前也没有完成过拖动
+        if (
+            !page3HasValidDrag &&
+            !page3HasStartedDragging
+        ) {
+
+            // 重新显示粉色箭头
+            document.getElementById(
+                "page3Arrow"
+            ).style.display = "block";
+
+        }
+
+
+        // 释放当前鼠标或手指
+        if (
+            page3.hasPointerCapture(
+                event.pointerId
+            )
+        ) {
+
+            page3.releasePointerCapture(
+                event.pointerId
+            );
+
+        }
+
+
+        // 重置本次拖动状态
+        page3HasValidDrag = false;
+
+    }
+);

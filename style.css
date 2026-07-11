@@ -422,3 +422,94 @@ body {
     z-index: 60;
 
 }
+
+/* Page3放大盲盒 */
+.page3-box {
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+
+    object-fit: contain;
+
+    display: none;
+
+    z-index: 61;
+
+    pointer-events: none;
+
+}
+
+/* Page3粉色箭头 */
+.page3-arrow {
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+
+    object-fit: contain;
+
+    display: none;
+
+    z-index: 62;
+
+    pointer-events: none;
+
+    transform-origin: center center;
+
+    animation:
+    page3ArrowMove 1.2s ease-in-out infinite alternate;
+
+}
+
+@keyframes page3ArrowMove {
+
+    0% {
+
+        transform:
+            translate3d(0, 0, 0);
+
+    }
+
+
+    100% {
+
+        transform:
+            translate3d(65px, 20px, 0);
+
+    }
+
+}
+
+/* Page3手部图标 */
+.page3-hand {
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+
+    object-fit: contain;
+
+    display: none;
+
+    z-index: 63;
+
+    pointer-events: none;
+
+    transform-origin: center center;
+
+    will-change: transform;
+
+}
