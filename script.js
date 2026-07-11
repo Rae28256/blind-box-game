@@ -524,6 +524,360 @@ function playTapSound() {
 }
 
 // ===========================
+// Box 1、2、4、5、6晃动“唰”声
+// ===========================
+
+function playSwooshSound() {
+
+    const AudioContextClass =
+        window.AudioContext ||
+        window.webkitAudioContext;
+
+
+    if (!AudioContextClass) return;
+
+
+    if (!tapAudioContext) {
+
+        tapAudioContext =
+            new AudioContextClass();
+
+    }
+
+
+    function createSwooshSound() {
+
+        const currentTime =
+            tapAudioContext.currentTime;
+
+
+        const soundDuration =
+            0.18;
+
+
+        const noiseBuffer =
+            tapAudioContext.createBuffer(
+                1,
+                tapAudioContext.sampleRate *
+                soundDuration,
+                tapAudioContext.sampleRate
+            );
+
+
+        const noiseData =
+            noiseBuffer.getChannelData(0);
+
+
+        for (
+            let index = 0;
+            index < noiseData.length;
+            index++
+        ) {
+
+            const soundProgress =
+                index / noiseData.length;
+
+
+            const envelope =
+                Math.sin(
+                    Math.PI * soundProgress
+                );
+
+
+            noiseData[index] =
+                (Math.random() * 2 - 1) *
+                envelope;
+
+        }
+
+
+        const noiseSource =
+            tapAudioContext.createBufferSource();
+
+
+        const soundFilter =
+            tapAudioContext.createBiquadFilter();
+
+
+        const gainNode =
+            tapAudioContext.createGain();
+
+
+        noiseSource.buffer =
+            noiseBuffer;
+
+
+        soundFilter.type =
+            "bandpass";
+
+
+        soundFilter.frequency.setValueAtTime(
+            650,
+            currentTime
+        );
+
+
+        soundFilter.frequency.exponentialRampToValueAtTime(
+            1800,
+            currentTime + soundDuration
+        );
+
+
+        soundFilter.Q.value =
+            0.7;
+
+
+        gainNode.gain.setValueAtTime(
+            0.001,
+            currentTime
+        );
+
+
+        gainNode.gain.linearRampToValueAtTime(
+            0.16,
+            currentTime + 0.035
+        );
+
+
+        gainNode.gain.exponentialRampToValueAtTime(
+            0.001,
+            currentTime + soundDuration
+        );
+
+
+        noiseSource.connect(
+            soundFilter
+        );
+
+
+        soundFilter.connect(
+            gainNode
+        );
+
+
+        gainNode.connect(
+            tapAudioContext.destination
+        );
+
+
+        noiseSource.start(
+            currentTime
+        );
+
+
+        noiseSource.stop(
+            currentTime + soundDuration
+        );
+
+    }
+
+
+    if (
+        tapAudioContext.state ===
+        "suspended"
+    ) {
+
+        tapAudioContext.resume().then(() => {
+
+            createSwooshSound();
+
+        }).catch(() => { });
+
+    } else {
+
+        createSwooshSound();
+
+    }
+
+}
+
+// ===========================
+// Box 3晃动清脆铃铛声
+// ===========================
+
+function playBellSound() {
+
+    const AudioContextClass =
+        window.AudioContext ||
+        window.webkitAudioContext;
+
+
+    if (!AudioContextClass) return;
+
+
+    // 与其他音效共用声音环境
+    if (!tapAudioContext) {
+
+        tapAudioContext =
+            new AudioContextClass();
+
+    }
+
+
+    function createBellSound() {
+
+        const currentTime =
+            tapAudioContext.currentTime;
+
+
+        // 创建铃铛的主要音调
+        const mainTone =
+            tapAudioContext.createOscillator();
+
+
+        // 创建铃铛的高频泛音
+        const highTone =
+            tapAudioContext.createOscillator();
+
+
+        const mainGain =
+            tapAudioContext.createGain();
+
+
+        const highGain =
+            tapAudioContext.createGain();
+
+
+        // 使用柔和清脆的正弦波
+        mainTone.type =
+            "sine";
+
+
+        highTone.type =
+            "sine";
+
+
+        // 铃铛主要音高
+        mainTone.frequency.setValueAtTime(
+            880,
+            currentTime
+        );
+
+
+        // 铃铛高频泛音
+        highTone.frequency.setValueAtTime(
+            1320,
+            currentTime
+        );
+
+
+        // 主要音调快速出现，再逐渐消失
+        mainGain.gain.setValueAtTime(
+            0.13,
+            currentTime
+        );
+
+
+        mainGain.gain.exponentialRampToValueAtTime(
+            0.001,
+            currentTime + 0.45
+        );
+
+
+        // 高频泛音更轻、更短
+        highGain.gain.setValueAtTime(
+            0.055,
+            currentTime
+        );
+
+
+        highGain.gain.exponentialRampToValueAtTime(
+            0.001,
+            currentTime + 0.28
+        );
+
+
+        mainTone.connect(
+            mainGain
+        );
+
+
+        highTone.connect(
+            highGain
+        );
+
+
+        mainGain.connect(
+            tapAudioContext.destination
+        );
+
+
+        highGain.connect(
+            tapAudioContext.destination
+        );
+
+
+        mainTone.start(
+            currentTime
+        );
+
+
+        highTone.start(
+            currentTime
+        );
+
+
+        mainTone.stop(
+            currentTime + 0.45
+        );
+
+
+        highTone.stop(
+            currentTime + 0.28
+        );
+
+    }
+
+
+    // 兼容手机浏览器暂停声音环境
+    if (
+        tapAudioContext.state ===
+        "suspended"
+    ) {
+
+        tapAudioContext.resume().then(() => {
+
+            createBellSound();
+
+        }).catch(() => { });
+
+    } else {
+
+        createBellSound();
+
+    }
+
+}
+
+// ===========================
+// 根据当前Box选择晃动音效
+// ===========================
+
+function playCurrentBoxShakeSound() {
+
+    // 两次音效间隔不足时不播放
+    if (!canPlayShakeSound()) {
+
+        return;
+
+    }
+
+
+    // 第3个Box播放铃铛声
+    if (currentIndex === 3) {
+
+        playBellSound();
+
+    } else {
+
+        // 其他Box播放“唰”声
+        playSwooshSound();
+
+    }
+
+}
+
+// ===========================
 // Page2盲盒手机跟随计算
 // ===========================
 
@@ -540,6 +894,41 @@ let motionReturnTimer = null;
 
 // 左右轮播时暂停手机晃动
 let boxMotionLocked = false;
+
+// 上一次播放晃动音效的时间
+let lastShakeSoundTime = 0;
+
+
+// 两次晃动音效的最小间隔
+const shakeSoundCooldown = 350;
+
+
+// 判断当前是否可以播放晃动音效
+function canPlayShakeSound() {
+
+    const currentTime =
+        performance.now();
+
+
+    // 距离上一次播放不足350ms时不播放
+    if (
+        currentTime - lastShakeSoundTime <
+        shakeSoundCooldown
+    ) {
+
+        return false;
+
+    }
+
+
+    // 记录本次播放时间
+    lastShakeSoundTime =
+        currentTime;
+
+
+    return true;
+
+}
 
 
 // 让Box立即恢复默认位置
@@ -636,6 +1025,14 @@ function handleBoxOrientation(event) {
 
     }
 
+    // 只有明显晃动时才播放音效
+    if (
+        Math.abs(gammaMovement) >= 0.6
+    ) {
+
+        playCurrentBoxShakeSound();
+
+    }
 
     // 当前角度与本次起始角度之间的差值
     const gammaDifference =
@@ -657,7 +1054,7 @@ function handleBoxOrientation(event) {
 
     // 根据水平位置产生小幅度旋转
     const rotate =
-        moveX / 40 * 4;
+        moveX / 40 * 6;
 
 
     boxMotion.style.transform =
