@@ -900,7 +900,7 @@ let lastShakeSoundTime = 0;
 
 
 // 两次晃动音效的最小间隔
-const shakeSoundCooldown = 350;
+const shakeSoundCooldown = 600;
 
 
 // 判断当前是否可以播放晃动音效
