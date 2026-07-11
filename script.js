@@ -1,4 +1,6 @@
 let currentIndex = 1;
+// 用户最终购入的盲盒编号，范围为1～6
+let purchasedBoxIndex = 1;
 
 // 1. 获取 DOM
 
@@ -20,6 +22,447 @@ const buyHit = document.getElementById("buyHit");
 const page3 = document.getElementById("page3");
 const page3Hand = document.getElementById("page3Hand");
 
+const page3Box = document.getElementById("page3Box");
+
+// Page4静态背景
+const page4 =
+    document.getElementById("page4");
+
+// Page4娃娃图层
+const page4Doll =
+    document.getElementById("page4Doll");
+
+// Page4彩带序列帧图层
+const page4Confetti =
+    document.getElementById(
+        "page4Confetti"
+    );
+
+
+// Page5娃娃详情页
+const page5 =
+    document.getElementById(
+        "page5"
+    );
+
+// Page5六款娃娃详情图片
+const page5Images = [
+    "images/page5_01.png",
+    "images/page5_02.png",
+    "images/page5_03.png",
+    "images/page5_04.png",
+    "images/page5_05.png",
+    "images/page5_06.png"
+];
+
+// 提前加载Page5的六张详情图片
+const page5PreloadedImages =
+    page5Images.map(
+        page5ImagePath => {
+
+            const page5Image =
+                new Image();
+
+            page5Image.src =
+                page5ImagePath;
+
+            return page5Image;
+        }
+    );
+
+// 根据最终购入编号更新Page5详情图片
+function updatePage5() {
+
+    // purchasedBoxIndex为1～6
+    // 数组位置为0～5，所以需要减1
+    const page5ArrayIndex =
+        purchasedBoxIndex - 1;
+
+    page5.src =
+        page5Images[
+        page5ArrayIndex
+        ];
+
+    // 显示Page5
+    function showPage5() {
+
+        // 进入Page5后立即关闭Page4点击权限
+        page4CanGoToPage5 = false;
+
+
+        // 停止彩带序列帧计时器
+        clearTimeout(
+            page4ConfettiTimer
+        );
+
+
+        // 停止娃娃缩放引导
+        page4Doll.classList.remove(
+            "page4-doll-guide"
+        );
+
+
+        // 隐藏Page4全部图层
+        page4.style.display = "none";
+        page4Doll.style.display = "none";
+        page4Confetti.style.display = "none";
+
+
+        // 根据最终购入编号更新Page5
+        updatePage5();
+
+
+        // 显示Page5
+        page5.style.display = "block";
+    }
+}
+
+// 显示Page5
+function showPage5() {
+
+    // 进入Page5后立即关闭Page4点击权限
+    page4CanGoToPage5 = false;
+
+
+    // 停止彩带序列帧计时器
+    clearTimeout(
+        page4ConfettiTimer
+    );
+
+
+    // 停止娃娃缩放引导
+    page4Doll.classList.remove(
+        "page4-doll-guide"
+    );
+
+
+    // 隐藏Page4全部图层
+    page4.style.display = "none";
+    page4Doll.style.display = "none";
+    page4Confetti.style.display = "none";
+
+
+    // 根据最终购入编号更新Page5
+    updatePage5();
+
+
+    // 显示Page5
+    page5.style.display = "block";
+}
+
+// 点击Page4进入对应的Page5详情页
+page4.addEventListener(
+    "click",
+    () => {
+
+        // 彩带动画没有播放完成时，点击无效
+        if (!page4CanGoToPage5) {
+            return;
+        }
+
+
+        // 立即关闭权限，防止连续点击重复触发
+        page4CanGoToPage5 = false;
+
+
+        // 播放原有的泡泡点击音效
+        playTapSound();
+
+
+        // 显示对应的Page5
+        showPage5();
+    }
+);
+
+// Page4彩带动画的7张序列帧
+const page4ConfettiFrames = [
+    "images/page4_confetti_00.png",
+    "images/page4_confetti_01.png",
+    "images/page4_confetti_02.png",
+    "images/page4_confetti_03.png",
+    "images/page4_confetti_04.png",
+    "images/page4_confetti_05.png",
+    "images/page4_confetti_06.png"
+];
+
+// 提前加载Page4的7张彩带序列帧
+const page4ConfettiPreloadedImages =
+    page4ConfettiFrames.map(
+        confettiFramePath => {
+
+            const confettiFrameImage =
+                new Image();
+
+            confettiFrameImage.src =
+                confettiFramePath;
+
+            return confettiFrameImage;
+        }
+    );
+
+// Page4彩带动画当前帧
+let page4ConfettiFrameIndex = 0;
+
+// Page4彩带动画计时器
+let page4ConfettiTimer = null;
+
+// Page4是否允许点击进入Page5
+// 必须等彩带动画播放完成后才能变为true
+let page4CanGoToPage5 = false;
+
+
+// 播放Page4彩带序列帧动画
+function playPage4ConfettiAnimation() {
+
+    // 防止动画被重复启动
+    clearTimeout(
+        page4ConfettiTimer
+    );
+
+    // 彩带播放期间禁止点击进入Page5
+    page4CanGoToPage5 = false;
+
+    // 从头播放一次Page4庆祝音效
+    page4CelebrationAudio.pause();
+    page4CelebrationAudio.currentTime = 0;
+
+    page4CelebrationAudio
+        .play()
+        .catch(() => {
+            // 浏览器暂时阻止播放时，不影响彩带动画
+        });
+
+    page4ConfettiFrameIndex = 0;
+
+    page4Confetti.src =
+        page4ConfettiFrames[0];
+
+    page4Confetti.style.display =
+        "block";
+
+
+    // 每次切换到下一帧前的等待时间
+    const page4ConfettiFrameTimes = [
+        120,
+        150,
+        165,
+        210,
+        230,
+        240
+    ];
+
+
+    function showNextConfettiFrame() {
+
+
+        if (
+            page4ConfettiFrameIndex >=
+            page4ConfettiFrames.length - 1
+        ) {
+
+            // 彩带动画完成后，启动娃娃点击引导
+            page4Doll.classList.add(
+                "page4-doll-guide"
+            );
+
+            // 彩带动画完成后，允许点击进入Page5
+            page4CanGoToPage5 = true;
+
+            return;
+        }
+
+
+        const currentFrameTime =
+            page4ConfettiFrameTimes[
+            page4ConfettiFrameIndex
+            ];
+
+
+        page4ConfettiTimer =
+            setTimeout(
+                () => {
+
+                    page4ConfettiFrameIndex += 1;
+
+                    page4Confetti.src =
+                        page4ConfettiFrames[
+                        page4ConfettiFrameIndex
+                        ];
+
+                    showNextConfettiFrame();
+                },
+                currentFrameTime
+            );
+    }
+
+
+    showNextConfettiFrame();
+}
+
+// Page4六款娃娃图片
+const page4DollImages = [
+    "images/page4_doll_01.png",
+    "images/page4_doll_02.png",
+    "images/page4_doll_03.png",
+    "images/page4_doll_04.png",
+    "images/page4_doll_05.png",
+    "images/page4_doll_06.png"
+];
+
+// 提前加载Page4的六张娃娃图片
+const page4DollPreloadedImages =
+    page4DollImages.map(
+        dollImagePath => {
+
+            const dollImage =
+                new Image();
+
+            dollImage.src =
+                dollImagePath;
+
+            return dollImage;
+        }
+    );
+
+// 根据最终购入编号更新Page4娃娃
+function updatePage4Doll() {
+
+    // purchasedBoxIndex为1～6
+    // 数组位置为0～5，所以需要减1
+    const page4DollArrayIndex =
+        purchasedBoxIndex - 1;
+
+    page4Doll.src =
+        page4DollImages[
+        page4DollArrayIndex
+        ];
+}
+
+// 显示Page4
+function showPage4() {
+
+    // 停止Page3撕纸音效
+    page3PaperTearAudio.pause();
+
+    clearTimeout(
+        page3PaperTearAudio.stopTimer
+    );
+
+
+    // 隐藏Page3全部图层
+    page3.style.display = "none";
+    page3Box.style.display = "none";
+    page3Hand.style.display = "none";
+
+    document.getElementById(
+        "page3Arrow"
+    ).style.display = "none";
+
+
+    // 根据最终购入编号更新娃娃
+    updatePage4Doll();
+
+
+    // 显示Page4背景和对应娃娃
+    page4.style.display = "block";
+    page4Doll.style.display = "block";
+
+    // 播放一次Page4彩带炸开动画
+    playPage4ConfettiAnimation();
+}
+
+// Page3连续撕纸音效
+// 当前只加载，暂时不连接拖动播放
+const page3PaperTearAudio =
+    new Audio(
+        "images/page3_paper_tear.mp3"
+    );
+
+page3PaperTearAudio.preload = "auto";
+// 撕纸音效使用音频文件的最大音量
+page3PaperTearAudio.volume = 1;
+
+// Page4彩带庆祝音效
+// 当前只加载，暂时不播放
+const page4CelebrationAudio =
+    new Audio(
+        "images/page4_celebration.mp3"
+    );
+
+page4CelebrationAudio.preload =
+    "auto";
+
+page4CelebrationAudio.volume =
+    1;
+
+// Page3盲盒撕开状态图
+const page3BoxFrames = [
+
+    "images/page3_box_00.png",
+
+    "images/page3_box_01.png",
+
+    "images/page3_box_02.png",
+
+    "images/page3_box_03.png",
+
+    "images/page3_box_04.png",
+
+    "images/page3_box_05.png"
+
+];
+
+// Page3盲盒当前显示的状态帧
+let page3BoxFrameIndex = 0;
+let page3BoxTearStartProgress = 0;
+
+// 更新Page3盲盒状态图
+function updatePage3BoxFrame(
+    nextFrameIndex
+) {
+
+    // 限制帧编号只能在0～5之间
+    const safeFrameIndex =
+        Math.max(
+            0,
+            Math.min(
+                page3BoxFrames.length - 1,
+                nextFrameIndex
+            )
+        );
+
+
+    // 记录当前帧编号
+    page3BoxFrameIndex =
+        safeFrameIndex;
+
+
+    // 更换盲盒图片
+    page3Box.src =
+        page3BoxFrames[
+        page3BoxFrameIndex
+        ];
+
+}
+
+// 提前加载Page3的6张盲盒状态图
+const page3BoxPreloadedImages =
+    page3BoxFrames.map(
+        framePath => {
+
+            const frameImage =
+                new Image();
+
+
+            frameImage.src =
+                framePath;
+
+
+            return frameImage;
+
+        }
+    );
+
 // Page3鼠标是否正在按住拖动，松开后变回false
 let isPage3Dragging = false;
 // Page3是否已经开始过拖动，后续用于让粉色箭头在第一次拖动后保持隐藏
@@ -30,6 +473,8 @@ let page3PointerStartX = 0;
 let page3PointerStartY = 0;
 // 本次操作是否达到有效拖动距离
 let page3HasValidDrag = false;
+// Page3是否已经完成撕盒并开始跳转
+let page3HasCompleted = false;
 
 // Page3手部指尖轨迹起点
 const page3HandPathStartX = 58;
@@ -55,9 +500,15 @@ const page3HandPathMoveY =
 // 0代表起点，1代表终点
 let page3HandProgress = 0;
 
+// Page3手部未经阻力处理的原始进度
+// 后续用它计算稳定、连续的撕纸阻力
+let page3HandRawProgress = 0;
 
 // 鼠标按下时，手部原来的轨迹进度
 let page3HandProgressAtPointerDown = 0;
+
+// 鼠标按下时，未经阻力处理的原始进度
+let page3HandRawProgressAtPointerDown = 0;
 
 // 2. 初始化状态（必须在DOM之后）
 page2.style.display = "none";
@@ -75,6 +526,12 @@ buyHit.style.display = "none";
 
 page3.style.display = "none";
 
+// Page4初始状态
+page4.style.display = "none";
+page4Doll.style.display = "none";
+
+// Page5初始状态
+page5.style.display = "none";
 
 const box = document.getElementById("box");
 const boxNext = document.getElementById("boxNext");
@@ -401,6 +858,9 @@ page2Left.addEventListener("click", () => {
 // ===========================
 
 buyHit.addEventListener("click", () => {
+
+    // 记录用户最终购入的是第几款盲盒
+    purchasedBoxIndex = currentIndex;
 
     // 购入按钮点击音效
 
@@ -1305,6 +1765,10 @@ page3.addEventListener(
         page3HandProgressAtPointerDown =
             page3HandProgress;
 
+        // 记录按下时未经阻力处理的原始进度
+        page3HandRawProgressAtPointerDown =
+            page3HandRawProgress;
+
 
         // 每次按下时，先视为没有发生有效拖动
         page3HasValidDrag = false;
@@ -1361,12 +1825,15 @@ page3.addEventListener(
 
         // 移动达到40px后，判定为有效拖动
         if (totalMoveDistance >= 40) {
-
             page3HasValidDrag = true;
-
             page3HasStartedDragging = true;
 
+            if (page3BoxFrameIndex === 0) {
+                page3BoxTearStartProgress = page3HandProgress;
+                updatePage3BoxFrame(1);
+            }
         }
+
 
         // 获取Page3在当前电脑窗口中的实际尺寸
         const page3Rect =
@@ -1402,25 +1869,51 @@ page3.addEventListener(
             ) /
             pathLengthSquared;
 
-        // 计算鼠标本次移动后可能到达的进度
-        const nextPage3HandProgress =
+        // 记录本次计算前的手部进度
+        // 后续用来判断蓝手是否真正向前移动
+        const previousPage3HandProgress =
+            page3HandProgress;
+
+        // 计算未经阻力处理的原始进度
+        const nextPage3HandRawProgress =
             Math.max(
                 0,
                 Math.min(
                     1,
-                    page3HandProgressAtPointerDown +
+                    page3HandRawProgressAtPointerDown +
                     progressChange
                 )
             );
 
 
-        // 手部只能前进，不能向后退
+        // 原始进度同样只能前进，不能后退
+        page3HandRawProgress =
+            Math.max(
+                page3HandRawProgress,
+                nextPage3HandRawProgress
+            );
+
+        // 给原始进度加入连续的撕纸阻力曲线
+        // 开始和结束稍慢，中间较顺畅
+        const resistedPage3HandProgress =
+            page3HandRawProgress < 0.5
+                ? 2 *
+                page3HandRawProgress *
+                page3HandRawProgress
+                : 1 -
+                Math.pow(
+                    -2 * page3HandRawProgress + 2,
+                    2
+                ) / 2;
+
+
+        // 使用阻力处理后的进度控制蓝手
+        // 手部仍然只能前进，不能向后退
         page3HandProgress =
             Math.max(
                 page3HandProgress,
-                nextPage3HandProgress
+                resistedPage3HandProgress
             );
-
 
         // 根据当前进度计算手部移动距离
         const page3HandMoveX =
@@ -1436,6 +1929,82 @@ page3.addEventListener(
         // 让手部只沿设定的斜向轨迹移动
         page3Hand.style.transform =
             `translate3d(${page3HandMoveX}px, ${page3HandMoveY}px, 0)`;
+
+        // 只有达到有效拖动距离，并且蓝手真正向前移动时
+        // 才开始播放撕纸音效
+        if (
+            page3HasValidDrag &&
+            page3HandProgress >
+            previousPage3HandProgress
+        ) {
+            if (page3PaperTearAudio.paused) {
+
+                // 音频已经播放结束时，从头重新播放
+                if (page3PaperTearAudio.ended) {
+                    page3PaperTearAudio.currentTime = 0;
+                }
+
+                page3PaperTearAudio
+                    .play()
+                    .catch(() => {
+                        // 浏览器暂时阻止播放时不影响其他交互
+                    });
+            }
+
+
+            // 每次蓝手继续前进时，重新计算停止时间
+            clearTimeout(
+                page3PaperTearAudio.stopTimer
+            );
+
+            page3PaperTearAudio.stopTimer =
+                setTimeout(
+                    () => {
+                        page3PaperTearAudio.pause();
+                    },
+                    280
+                );
+        }
+
+        if (page3HasValidDrag) {
+            const remainingProgress = Math.max(
+                0.001,
+                1 - page3BoxTearStartProgress
+            );
+
+            const page3BoxTearProgress = Math.max(
+                0,
+                Math.min(
+                    1,
+                    (page3HandProgress - page3BoxTearStartProgress) /
+                    remainingProgress
+                )
+            );
+
+            const nextPage3BoxFrame = Math.round(
+                1 + page3BoxTearProgress * 4
+            );
+
+            updatePage3BoxFrame(nextPage3BoxFrame);
+
+            // 蓝手到达终点并且盲盒完全撕开后
+            // 只触发一次Page4跳转
+            if (
+                page3HandProgress >= 0.999 &&
+                page3BoxFrameIndex === 5 &&
+                !page3HasCompleted
+            ) {
+                page3HasCompleted = true;
+
+                // 短暂停留，让用户看清完全撕开的状态
+                setTimeout(
+                    () => {
+                        showPage4();
+                    },
+                    380
+                );
+            }
+        }
     }
 );
 
@@ -1456,6 +2025,11 @@ page3.addEventListener(
 
             page3HandProgress =
                 page3HandProgressAtPointerDown;
+
+
+            // 误触回位时，原始进度也恢复
+            page3HandRawProgress =
+                page3HandRawProgressAtPointerDown;
 
 
             const returnHandX =

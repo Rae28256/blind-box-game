@@ -515,3 +515,122 @@ body {
     will-change: transform;
 
 }
+
+/* Page4静态背景 */
+.page4-bg {
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+
+    object-fit: contain;
+
+    z-index: 70;
+
+    /* Page4整个页面后续可以接收点击 */
+    pointer-events: auto;
+
+}
+
+/* Page4娃娃图层 */
+.page4-doll {
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+
+    object-fit: contain;
+
+    z-index: 71;
+
+    /* 避免娃娃图片单独拦截Page4点击 */
+    pointer-events: none;
+
+}
+
+/* Page4娃娃点击引导动画 */
+.page4-doll-guide {
+
+    /* 暂时以375×812画布中心作为缩放中心 */
+    transform-origin: 50% 50%;
+
+    animation:
+        page4DollGuide 2.6s ease-in-out infinite;
+
+}
+
+
+/* Page4娃娃轻微放大缩小 */
+@keyframes page4DollGuide {
+
+    0% {
+
+        transform:
+            scale(1);
+
+    }
+
+    50% {
+
+        transform:
+            scale(1.025);
+
+    }
+
+    100% {
+
+        transform:
+            scale(1);
+
+    }
+
+}
+
+/* Page4彩带序列帧图层 */
+.page4-confetti {
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+
+    object-fit: contain;
+
+    /* 彩带显示在娃娃上方 */
+    z-index: 72;
+
+    /* 彩带不能阻挡Page4后续的点击 */
+    pointer-events: none;
+
+}
+
+/* Page5娃娃详情页 */
+.page5-bg {
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+
+    object-fit: contain;
+
+    /* Page5显示在Page4所有图层上方 */
+    z-index: 80;
+
+    pointer-events: auto;
+
+}
