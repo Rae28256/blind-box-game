@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finger Demo</title>
-    <link rel="stylesheet" href="style.css?v=29071103">
+    <link rel="stylesheet" href="style.css?v=29071201">
 </head>
 
 <body>
@@ -15,7 +15,23 @@
         <!-- 背景 -->
         <img src="images/page1_bg.png" class="bg">
 
-        <!-- 🔥 点击区域层（新增的就在这里） -->
+        <!-- Page1六个盲盒的售出覆盖图，默认隐藏 -->
+        <img src="images/page1_sold_01.png" class="page1-sold" id="page1Sold01" style="display: none;">
+
+        <img src="images/page1_sold_02.png" class="page1-sold" id="page1Sold02" style="display: none;">
+
+        <img src="images/page1_sold_03.png" class="page1-sold" id="page1Sold03" style="display: none;">
+
+        <img src="images/page1_sold_04.png" class="page1-sold" id="page1Sold04" style="display: none;">
+
+        <img src="images/page1_sold_05.png" class="page1-sold" id="page1Sold05" style="display: none;">
+
+        <img src="images/page1_sold_06.png" class="page1-sold" id="page1Sold06" style="display: none;">
+
+        <!-- Page1右下角人物前景图层 -->
+        <img src="images/page1_foreground.png" class="page1-foreground" id="page1Foreground">
+
+        <!--Page1点击区域层-->
         <div class="click-layer">
 
             <div class="click-box" data-id="1"></div>
@@ -36,6 +52,18 @@
         <!-- Page2 缩略图状态 -->
         <img src="images/thumbnail_1.png" class="thumbnail" id="thumbnail">
 
+        <!-- Page2缩略图六个售出覆盖图，默认隐藏 -->
+        <img src="images/page2_thumb_sold_01.png" class="page2-thumb-sold" id="page2ThumbSold01" style="display: none;">
+
+        <img src="images/page2_thumb_sold_02.png" class="page2-thumb-sold" id="page2ThumbSold02" style="display: none;">
+
+        <img src="images/page2_thumb_sold_03.png" class="page2-thumb-sold" id="page2ThumbSold03" style="display: none;">
+
+        <img src="images/page2_thumb_sold_04.png" class="page2-thumb-sold" id="page2ThumbSold04" style="display: none;">
+
+        <img src="images/page2_thumb_sold_05.png" class="page2-thumb-sold" id="page2ThumbSold05" style="display: none;">
+
+        <img src="images/page2_thumb_sold_06.png" class="page2-thumb-sold" id="page2ThumbSold06" style="display: none;">
 
         <!-- Page2 盲盒晃动容器 -->
         <div class="box-motion" id="boxMotion">
@@ -88,6 +116,26 @@
         <!-- Page5娃娃详情页，默认显示第1款并保持隐藏 -->
         <img src="images/page5_01.png" class="page5-bg" id="page5" style="display: none;">
 
+        <!-- Page5继续购买按钮图片 -->
+        <img src="images/page5_continue.png" class="page5-button page5-continue-button" id="page5ContinueButton"
+            style="display: none;">
+
+        <!-- Page5结束购买按钮图片 -->
+        <img src="images/page5_finish.png" class="page5-button page5-finish-button" id="page5FinishButton"
+            style="display: none;">
+
+        <!-- Page5继续购买透明热区 -->
+        <div class="page5-continue-hit" id="page5ContinueHit" style="display: none;"></div>
+
+        <!-- Page5结束购买透明热区 -->
+        <div class="page5-finish-hit" id="page5FinishHit" style="display: none;"></div>
+
+        <!-- Page6静态背景，默认隐藏 -->
+        <img src="images/page6_bg.png" class="page6-bg" id="page6" style="display: none;">
+
+        <!-- Page6小人序列帧，默认显示第00帧并保持隐藏 -->
+        <img src="images/page6_character_00.png" class="page6-character" id="page6Character" style="display: none;">
+
         <!-- Page2 返回点击区域 -->
         <div class="page2-back-hit" id="page2Back"></div>
 
@@ -100,7 +148,7 @@
 
     </div>
 
-    <script src="script.js?v=29071103"></script>
+    <script src="script.js?v=29071201"></script>
 
 </body>
 

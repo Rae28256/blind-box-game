@@ -2,9 +2,17 @@ let currentIndex = 1;
 // 用户最终购入的盲盒编号，范围为1～6
 let purchasedBoxIndex = 1;
 
+// 记录所有已经购买过的盲盒编号
+const purchasedBoxIndexes =
+    new Set();
+
 // 1. 获取 DOM
 
 const clickBoxes = document.querySelectorAll(".click-box");
+
+// Page1六张售出覆盖图
+const page1SoldImages = document.querySelectorAll(".page1-sold");
+
 const page2 = document.getElementById("page2");
 const page2Back = document.getElementById("page2Back");
 
@@ -12,6 +20,9 @@ const page2Left = document.getElementById("page2Left");
 const page2Right = document.getElementById("page2Right");
 
 const thumbnail = document.getElementById("thumbnail");
+
+// Page2六张缩略图售出覆盖图
+const page2ThumbSoldImages = document.querySelectorAll(".page2-thumb-sold");
 
 const arrowLeft = document.getElementById("arrowLeft");
 const arrowRight = document.getElementById("arrowRight");
@@ -44,6 +55,267 @@ const page5 =
     document.getElementById(
         "page5"
     );
+
+// Page5继续购买按钮图片
+const page5ContinueButton =
+    document.getElementById(
+        "page5ContinueButton"
+    );
+
+// Page5结束购买按钮图片
+const page5FinishButton =
+    document.getElementById(
+        "page5FinishButton"
+    );
+
+// Page5继续购买热区
+const page5ContinueHit =
+    document.getElementById(
+        "page5ContinueHit"
+    );
+
+// Page5结束购买热区
+const page5FinishHit =
+    document.getElementById(
+        "page5FinishHit"
+    );
+
+// Page6静态背景
+const page6 =
+    document.getElementById(
+        "page6"
+    );
+
+// Page6小人序列帧图层
+const page6Character =
+    document.getElementById(
+        "page6Character"
+    );
+
+// Page6小人动画的4张序列帧
+const page6CharacterFrames = [
+    "images/page6_character_00.png",
+    "images/page6_character_01.png",
+    "images/page6_character_02.png",
+    "images/page6_character_03.png"
+];
+
+// 提前加载Page6小人的4张序列帧
+const page6CharacterPreloadedImages =
+    page6CharacterFrames.map(
+        characterFramePath => {
+
+            const characterFrameImage =
+                new Image();
+
+            characterFrameImage.src =
+                characterFramePath;
+
+            return characterFrameImage;
+        }
+    );
+
+// Page6小人当前显示的帧编号
+let page6CharacterFrameIndex = 0;
+
+// Page6小人逐帧动画计时器
+let page6CharacterTimer = null;
+
+// 播放Page6小人逐帧动画
+function playPage6CharacterAnimation() {
+
+    // 防止重复启动多个计时器
+    clearTimeout(
+        page6CharacterTimer
+    );
+
+
+    // 每次进入Page6都从第00帧开始
+    page6CharacterFrameIndex = 0;
+
+    page6Character.src =
+        page6CharacterFrames[0];
+
+
+    function showNextPage6CharacterFrame() {
+
+        page6CharacterTimer =
+            setTimeout(
+                () => {
+
+                    // 00→01→02→03→00循环
+                    page6CharacterFrameIndex =
+                        (
+                            page6CharacterFrameIndex +
+                            1
+                        ) %
+                        page6CharacterFrames.length;
+
+
+                    page6Character.src =
+                        page6CharacterFrames[
+                        page6CharacterFrameIndex
+                        ];
+
+
+                    showNextPage6CharacterFrame();
+                },
+                200
+            );
+    }
+
+
+    showNextPage6CharacterFrame();
+}
+
+// 显示Page6
+function showPage6() {
+
+    // 隐藏Page5背景
+    page5.style.display =
+        "none";
+
+
+    // 隐藏Page5两个按钮图片
+    page5ContinueButton.style.display =
+        "none";
+
+    page5FinishButton.style.display =
+        "none";
+
+
+    // 隐藏Page5两个按钮热区
+    page5ContinueHit.style.display =
+        "none";
+
+    page5FinishHit.style.display =
+        "none";
+
+
+    // 清除Page5按钮残留的动画状态
+    page5ContinueButton.classList.remove(
+        "page5-button-active"
+    );
+
+    page5FinishButton.classList.remove(
+        "page5-button-active"
+    );
+
+
+    // 显示Page6背景和小人
+    page6.style.display =
+        "block";
+
+    page6Character.style.display =
+        "block";
+
+
+    // 播放Page6小人循环动画
+    playPage6CharacterAnimation();
+}
+
+// 继续购买：重置本轮状态并返回Page1
+function returnToPage1AfterPurchase() {
+
+    // 隐藏Page5背景
+    page5.style.display =
+        "none";
+
+
+    // 隐藏Page5两个按钮图片
+    page5ContinueButton.style.display =
+        "none";
+
+    page5FinishButton.style.display =
+        "none";
+
+
+    // 隐藏Page5两个按钮热区
+    page5ContinueHit.style.display =
+        "none";
+
+    page5FinishHit.style.display =
+        "none";
+
+
+    // 清除Page5按钮动画状态
+    page5ContinueButton.classList.remove(
+        "page5-button-active"
+    );
+
+    page5FinishButton.classList.remove(
+        "page5-button-active"
+    );
+
+
+    // 停止并重置Page4彩带动画
+    clearTimeout(
+        page4ConfettiTimer
+    );
+
+    page4ConfettiFrameIndex = 0;
+
+    page4Confetti.src =
+        page4ConfettiFrames[0];
+
+    page4CanGoToPage5 = false;
+
+
+    // 停止Page4娃娃缩放引导
+    page4Doll.classList.remove(
+        "page4-doll-guide"
+    );
+
+
+    // 停止Page4庆祝音效
+    page4CelebrationAudio.pause();
+    page4CelebrationAudio.currentTime = 0;
+
+
+    // 保证Page4全部图层隐藏
+    page4.style.display =
+        "none";
+
+    page4Doll.style.display =
+        "none";
+
+    page4Confetti.style.display =
+        "none";
+
+
+    // 重置Page3撕盒完成状态
+    page3HasCompleted = false;
+    page3HasStartedDragging = false;
+    page3HasValidDrag = false;
+    isPage3Dragging = false;
+
+
+    // 重置Page3手部进度
+    page3HandProgress = 0;
+    page3HandRawProgress = 0;
+
+    page3HandProgressAtPointerDown = 0;
+    page3HandRawProgressAtPointerDown = 0;
+
+    page3BoxTearStartProgress = 0;
+
+
+    // 恢复Page3盲盒第00帧
+    updatePage3BoxFrame(0);
+
+
+    // 恢复Page3蓝手初始位置
+    page3Hand.style.transition =
+        "none";
+
+    page3Hand.style.transform =
+        "translate3d(0, 0, 0)";
+
+
+    // 更新Page1售出覆盖图和热区
+    // 同时隐藏Page2缩略图售出状态
+    updateSoldState(false);
+}
 
 // Page5六款娃娃详情图片
 const page5Images = [
@@ -148,7 +420,100 @@ function showPage5() {
 
     // 显示Page5
     page5.style.display = "block";
+
+    // 显示Page5两个按钮图片
+    page5ContinueButton.style.display =
+        "block";
+
+    page5FinishButton.style.display =
+        "block";
+
+
+    // 显示Page5两个按钮热区
+    page5ContinueHit.style.display =
+        "block";
+
+    page5FinishHit.style.display =
+        "block";
 }
+
+// Page5继续购买按钮：记录已购状态并返回Page1
+page5ContinueHit.addEventListener(
+    "click",
+    () => {
+
+        // 播放泡泡点击音效
+        playTapSound();
+
+
+        // 播放Page5专用按钮反馈
+        page5ButtonFeedback(
+            page5ContinueButton
+        );
+
+
+        // 将本次购入编号加入已购集合
+        purchasedBoxIndexes.add(
+            purchasedBoxIndex
+        );
+
+
+        // 立即关闭两个热区
+        // 防止动画期间重复点击或点击另一个按钮
+        page5ContinueHit.style.display =
+            "none";
+
+        page5FinishHit.style.display =
+            "none";
+
+
+        // 等按钮反馈完成后返回Page1
+        setTimeout(
+            () => {
+
+                returnToPage1AfterPurchase();
+
+            },
+            400
+        );
+    }
+);
+
+// Page5结束购买按钮：进入Page6
+page5FinishHit.addEventListener(
+    "click",
+    () => {
+
+        // 播放泡泡点击音效
+        playTapSound();
+
+
+        // 播放Page5专用按钮反馈
+        page5ButtonFeedback(
+            page5FinishButton
+        );
+
+
+        // 立即关闭两个热区
+        // 防止动画期间重复点击或点击另一个按钮
+        page5ContinueHit.style.display =
+            "none";
+
+        page5FinishHit.style.display =
+            "none";
+
+
+        // 等按钮反馈结束后进入Page6
+        setTimeout(
+            () => {
+
+                showPage6();
+
+            },
+            400
+        );
+    }
+);
 
 // 点击Page4进入对应的Page5详情页
 page4.addEventListener(
@@ -533,6 +898,25 @@ page4Doll.style.display = "none";
 // Page5初始状态
 page5.style.display = "none";
 
+page5ContinueButton.style.display =
+    "none";
+
+page5FinishButton.style.display =
+    "none";
+
+page5ContinueHit.style.display =
+    "none";
+
+page5FinishHit.style.display =
+    "none";
+
+// Page6初始状态
+page6.style.display =
+    "none";
+
+page6Character.style.display =
+    "none";
+
 const box = document.getElementById("box");
 const boxNext = document.getElementById("boxNext");
 const boxMotion = document.getElementById("boxMotion");
@@ -566,6 +950,9 @@ clickBoxes.forEach(clickBox => {
 
         // 更新缩略图
         updateThumbnail();
+
+        // 进入Page2时显示已售缩略图状态
+        updateSoldState(true);
 
         page2.style.display = "block";
         page2Back.style.display = "block";
@@ -645,12 +1032,30 @@ page2Right.addEventListener("click", () => {
     isSliding = true;
 
 
-    let nextIndex = currentIndex + 1;
+    // 从当前编号开始向右寻找下一款未售盲盒
+    let nextIndex =
+        currentIndex;
 
-    if (nextIndex > 6) {
-        nextIndex = 1;
-    }
+    do {
 
+        nextIndex += 1;
+
+
+        // 超过6号后回到1号
+        if (nextIndex > 6) {
+
+            nextIndex = 1;
+
+        }
+
+    } while (
+        // 如果该编号已经售出，就继续向右寻找
+        purchasedBoxIndexes.has(
+            nextIndex
+        ) &&
+        // 只剩当前这一款时，允许停回当前编号
+        nextIndex !== currentIndex
+    );
 
 
     // 新box放右侧
@@ -754,13 +1159,30 @@ page2Left.addEventListener("click", () => {
 
 
 
-    let nextIndex = currentIndex - 1;
+    // 从当前编号开始向左寻找下一款未售盲盒
+    let nextIndex =
+        currentIndex;
+
+    do {
+
+        nextIndex -= 1;
 
 
-    if (nextIndex < 1) {
-        nextIndex = 6;
-    }
+        // 小于1号后回到6号
+        if (nextIndex < 1) {
 
+            nextIndex = 6;
+
+        }
+
+    } while (
+        // 如果该编号已经售出，就继续向左寻找
+        purchasedBoxIndexes.has(
+            nextIndex
+        ) &&
+        // 只剩当前这一款时，允许停回当前编号
+        nextIndex !== currentIndex
+    );
 
 
 
@@ -917,7 +1339,71 @@ buyHit.addEventListener("click", () => {
 
 });
 
+// 更新Page1和Page2的售出状态
+function updateSoldState(
+    showPage2SoldState = false
+) {
 
+    // 更新Page1售出覆盖图和点击热区
+    page1SoldImages.forEach(
+        (
+            soldImage,
+            arrayIndex
+        ) => {
+
+            // 数组从0开始，盲盒编号从1开始
+            const boxNumber =
+                arrayIndex + 1;
+
+            const isSold =
+                purchasedBoxIndexes.has(
+                    boxNumber
+                );
+
+
+            // 显示或隐藏Page1售出覆盖图
+            soldImage.style.display =
+                isSold
+                    ? "block"
+                    : "none";
+
+
+            // 已售盲盒热区不能点击
+            clickBoxes[
+                arrayIndex
+            ].style.pointerEvents =
+                isSold
+                    ? "none"
+                    : "auto";
+        }
+    );
+
+
+    // 更新Page2缩略图售出覆盖图
+    page2ThumbSoldImages.forEach(
+        (
+            soldImage,
+            arrayIndex
+        ) => {
+
+            const boxNumber =
+                arrayIndex + 1;
+
+            const isSold =
+                purchasedBoxIndexes.has(
+                    boxNumber
+                );
+
+
+            // 只有进入Page2时才显示缩略图售出状态
+            soldImage.style.display =
+                showPage2SoldState &&
+                    isSold
+                    ? "block"
+                    : "none";
+        }
+    );
+}
 
 function updateThumbnail() {
 
@@ -944,6 +1430,38 @@ function buttonFeedback(button) {
 
     }, 250);
 
+}
+
+// Page5按钮专用点击反馈
+function page5ButtonFeedback(button) {
+
+    // 移除上一次动画状态
+    button.classList.remove(
+        "page5-button-active"
+    );
+
+
+    // 强制浏览器刷新动画状态
+    button.offsetWidth;
+
+
+    // 重新启动Page5按钮动画
+    button.classList.add(
+        "page5-button-active"
+    );
+
+
+    // 动画完整播放后移除状态
+    setTimeout(
+        () => {
+
+            button.classList.remove(
+                "page5-button-active"
+            );
+
+        },
+        400
+    );
 }
 
 // ===========================

@@ -32,7 +32,7 @@ body {
                 calc(100vh / 812)));
 }
 
-/* 背景 */
+/* Page1背景 */
 .bg {
     position: absolute;
     width: 100%;
@@ -41,7 +41,47 @@ body {
     left: 0;
 }
 
-/* 手指 */
+/* Page1盲盒售出覆盖图 */
+.page1-sold {
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+
+    object-fit: contain;
+
+    z-index: 9;
+
+    pointer-events: none;
+
+}
+
+/* Page1右下角人物前景图层 */
+.page1-foreground {
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+
+    object-fit: contain;
+
+    /* 显示在售出覆盖图和Page1热区上方 */
+    z-index: 11;
+
+    /* 人物不能阻挡下面的点击热区 */
+    pointer-events: none;
+
+}
+
+/* Page1手指 */
 .finger {
     position: absolute;
     width: 100%;
@@ -189,6 +229,27 @@ body {
     object-fit: contain;
 
     display: none;
+}
+
+/* Page2缩略图售出覆盖图 */
+.page2-thumb-sold {
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+
+    object-fit: contain;
+
+    /* 显示在原缩略图上方 */
+    z-index: 36;
+
+    /* 覆盖图不接收点击 */
+    pointer-events: none;
+
 }
 
 /* ===========================
@@ -347,6 +408,48 @@ body {
 
     }
 
+
+}
+
+/* Page5按钮专用点击反馈 */
+.page5-button-active {
+
+    animation:
+        page5ButtonPress 0.4s ease;
+
+}
+
+
+/* Page5按钮专用缩放动画 */
+@keyframes page5ButtonPress {
+
+    0% {
+
+        transform:
+            scale(1);
+
+    }
+
+    35% {
+
+        transform:
+            scale(0.93);
+
+    }
+
+    65% {
+
+        transform:
+            scale(1.07);
+
+    }
+
+    100% {
+
+        transform:
+            scale(1);
+
+    }
 
 }
 
@@ -632,5 +735,123 @@ body {
     z-index: 80;
 
     pointer-events: auto;
+
+}
+
+/* Page5两个按钮图片的共同样式 */
+.page5-button {
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+
+    object-fit: contain;
+
+    z-index: 81;
+
+    /* 按钮图片本身不接收点击 */
+    pointer-events: none;
+
+}
+
+
+/* 继续购买按钮的缩放中心 */
+.page5-continue-button {
+
+    transform-origin:
+        99px 750px;
+
+}
+
+
+/* 结束购买按钮的缩放中心 */
+.page5-finish-button {
+
+    transform-origin:
+        276.5px 750px;
+
+}
+
+
+/* Page5两个点击热区的共同样式 */
+.page5-continue-hit,
+.page5-finish-hit {
+
+    position: absolute;
+
+    height: 62px;
+
+    bottom: 31px;
+
+    z-index: 82;
+
+    /* 当前使用红色，方便检查热区 */
+    background:
+        rgba(255, 0, 0, 0.35);
+
+}
+
+
+/* 继续购买热区 */
+.page5-continue-hit {
+
+    left: 20px;
+
+    width: 158px;
+
+}
+
+
+/* 结束购买热区 */
+.page5-finish-hit {
+
+    left: 198px;
+
+    width: 157px;
+
+}
+
+/* Page6静态背景 */
+.page6-bg {
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+
+    object-fit: contain;
+
+    /* Page6显示在Page5上方 */
+    z-index: 90;
+
+    pointer-events: none;
+
+}
+
+
+/* Page6小人序列帧图层 */
+.page6-character {
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+
+    object-fit: contain;
+
+    /* 小人显示在Page6背景上方 */
+    z-index: 91;
+
+    pointer-events: none;
 
 }
