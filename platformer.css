@@ -85,3 +85,32 @@
         transform: rotate(16deg);
     }
 }
+
+/* 横屏提示文字容器｜对应：index.html 的 #page8RotateText */
+.page8-rotate-text {
+    position: absolute;
+    top: 49%;
+    left: 0;
+    width: 100%;
+    z-index: 3;
+    text-align: center;
+    pointer-events: none;
+}
+
+/* 横屏提示主文字：关闭屏幕方向锁定 */
+.page8-rotate-text-main {
+    margin: 0;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+/* 横屏提示辅助文字：横向旋转手机，进入购物挑战 */
+.page8-rotate-text-sub {
+    margin: 8px 0 0;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.4;
+}
