@@ -87,9 +87,9 @@ function showPage8RotateHint() {
 
     // 检查用户是否已把手机旋转为横屏
     function checkPlatformerOrientation() {
-        const isLandscape = window.matchMedia(
-            '(orientation: landscape)'
-        ).matches;
+        // 微信浏览器兼容：直接比较当前可用画面的宽高
+        const isLandscape =
+            window.innerWidth > window.innerHeight;
 
         if (!isLandscape) {
             return;
