@@ -68,6 +68,12 @@ const page5FinishButton =
         "page5FinishButton"
     );
 
+// Page5六款全部买完后的宽版结束购买按钮图片
+const page5FinishFullButton =
+    document.getElementById(
+        "page5FinishFullButton"
+    );
+
 // Page5继续购买热区
 const page5ContinueHit =
     document.getElementById(
@@ -80,6 +86,12 @@ const page5FinishHit =
         "page5FinishHit"
     );
 
+// Page5六款全部买完后的宽版结束购买热区
+const page5FinishFullHit =
+    document.getElementById(
+        "page5FinishFullHit"
+    );
+
 // Page6静态背景
 const page6 =
     document.getElementById(
@@ -90,6 +102,156 @@ const page6 =
 const page6Character =
     document.getElementById(
         "page6Character"
+    );
+
+// Page7回家场景背景
+const page7 =
+    document.getElementById(
+        "page7"
+    );
+
+// Page7逐字显示的剧情文字
+const page7Dialog =
+    document.getElementById(
+        "page7Dialog"
+    );
+
+// Page7手机点击热区
+const page7PhoneHit =
+    document.getElementById(
+        "page7PhoneHit"
+    );
+
+// Page7手机特写画面
+const page7PhoneFocus =
+    document.getElementById(
+        "page7PhoneFocus"
+    );
+
+// 手机特写画面上的通知弹窗
+const page7Notification =
+    document.getElementById(
+        "page7Notification"
+    );
+
+// Page7手机通知弹窗点击热区
+const page7NotificationHit =
+    document.getElementById(
+        "page7NotificationHit"
+    );
+
+// Page8 Sweet Shop App首页
+const page8 =
+    document.getElementById(
+        "page8"
+    );
+
+// Page8故障动画序列图层
+const page8GlitchFrame =
+    document.getElementById(
+        "page8GlitchFrame"
+    );
+
+// Page8故障动画的图片顺序和每帧停留时间
+const page8GlitchSequence = [
+
+    // 第一次轻微故障
+    {
+        src: "images/page8_glitch_01.png",
+        duration: 90
+    },
+
+    // 短暂恢复为正常首页
+    {
+        src: "images/page8_bg.png",
+        duration: 180
+    },
+
+    // 再次出现轻微故障
+    {
+        src: "images/page8_glitch_01.png",
+        duration: 90
+    },
+
+    // 首页故障明显加重
+    {
+        src: "images/page8_glitch_02.png",
+        duration: 180
+    },
+
+    // App强制打开商品详情页
+    {
+        src: "images/page8_product.png",
+        duration: 300
+    },
+
+    // 商品详情第一次故障
+    {
+        src: "images/page8_product_glitch.png",
+        duration: 100
+    },
+
+    // 商品详情短暂恢复
+    {
+        src: "images/page8_product.png",
+        duration: 80
+    },
+
+    // 商品详情再次故障
+    {
+        src: "images/page8_product_glitch.png",
+        duration: 250
+    },
+
+    // 最终大面积崩溃
+    {
+        src: "images/page8_glitch_end.png",
+        duration: 350
+    }
+];
+
+// Page8故障动画当前播放到的序号
+let page8GlitchIndex = 0;
+
+// Page8故障动画计时器
+let page8GlitchTimer = null;
+
+// Page8正常显示后，自动开始故障动画的计时器
+let page8GlitchStartTimer = null;
+
+// 保存已经预加载的Page8故障图片
+const page8GlitchPreloadedImages = [];
+
+// 去除序列中重复的图片路径，再进行预加载
+const page8GlitchImageSources =
+    [
+        ...new Set(
+            page8GlitchSequence.map(
+                frame => frame.src
+            )
+        )
+    ];
+
+// 提前加载所有故障状态图
+page8GlitchImageSources.forEach(
+    imageSource => {
+
+        const preloadImage =
+            new Image();
+
+        preloadImage.src =
+            imageSource;
+
+        page8GlitchPreloadedImages.push(
+            preloadImage
+        );
+    }
+);
+
+// Page6进入Page7的纯白转场层
+const page6Page7WhiteTransition =
+    document.getElementById(
+        "page6Page7WhiteTransition"
     );
 
 // Page6小人动画的4张序列帧
@@ -120,6 +282,108 @@ let page6CharacterFrameIndex = 0;
 
 // Page6小人逐帧动画计时器
 let page6CharacterTimer = null;
+
+// Page6自动进入Page7的计时器
+let page6ToPage7Timer = null;
+
+// Page7需要逐字显示的剧情文案
+const page7StoryText =
+    "明明已经回到家了，\n脑子里却还惦记着其他的款式……";
+
+// Page7当前已经显示到的字符位置
+let page7TextIndex = 0;
+
+// Page7逐字显示文字的计时器
+let page7TextTimer = null;
+
+// 逐字显示Page7剧情文案
+function typePage7StoryText() {
+
+    // 所有文字显示完成后停止
+    if (
+        page7TextIndex >=
+        page7StoryText.length
+    ) {
+
+        page7TextTimer = null;
+
+        // 文案播放完成后播放一次手机通知音
+        playPage7NotificationSound();
+
+        // 通知音出现后短暂停顿，再自动进入手机特写画面
+        setTimeout(
+            () => {
+
+                showPage7PhoneFocus();
+
+            },
+            250
+        );
+
+        return;
+    }
+
+
+    // 获取当前需要显示的字符
+    const currentCharacter =
+        page7StoryText[
+        page7TextIndex
+        ];
+
+
+    // 将当前字符增加到文本框
+    page7Dialog.textContent +=
+        currentCharacter;
+
+
+    // 准备显示下一个字符
+    page7TextIndex += 1;
+
+
+    // 普通汉字的默认显示间隔
+    let characterDelay = 80;
+
+
+    // 换行时稍微停顿
+    if (
+        currentCharacter === "\n"
+    ) {
+
+        characterDelay = 160;
+
+    }
+
+
+    // 逗号处停顿更久
+    if (
+        currentCharacter === "，"
+    ) {
+
+        characterDelay = 220;
+
+    }
+
+
+    // 句号、省略号、问号和感叹号处停顿
+    if (
+        currentCharacter === "。" ||
+        currentCharacter === "…" ||
+        currentCharacter === "？" ||
+        currentCharacter === "！"
+    ) {
+
+        characterDelay = 320;
+
+    }
+
+
+    // 按照当前字符的时间继续显示下一个字
+    page7TextTimer =
+        setTimeout(
+            typePage7StoryText,
+            characterDelay
+        );
+}
 
 // 播放Page6小人逐帧动画
 function playPage6CharacterAnimation() {
@@ -212,6 +476,281 @@ function showPage6() {
 
     // 播放Page6小人循环动画
     playPage6CharacterAnimation();
+
+    // 清除可能残留的Page6跳转计时器
+    clearTimeout(
+        page6ToPage7Timer
+    );
+
+
+    // Page6保持1600ms后自动进入Page7
+    page6ToPage7Timer =
+        setTimeout(
+            () => {
+
+                playPage6ToPage7FadeTransition();
+
+            },
+            1600
+        );
+}
+
+// 显示Page7
+function showPage7() {
+
+    // 停止Page6小人逐帧动画
+    clearTimeout(
+        page6CharacterTimer
+    );
+
+
+    // 隐藏Page6背景和小人
+    page6.style.display =
+        "none";
+
+    page6Character.style.display =
+        "none";
+
+
+    // 显示Page7背景和剧情文字区域
+    page7.style.display =
+        "block";
+
+    page7Dialog.style.display =
+        "block";
+
+
+    // 停止可能残留的Page7文字计时器
+    clearTimeout(
+        page7TextTimer
+    );
+
+
+    // 每次进入Page7时先清空文字
+    page7Dialog.textContent =
+        "";
+
+
+    // 从文案的第一个字符重新开始
+    page7TextIndex = 0;
+}
+
+// 从Page7切换到手机特写画面
+function showPage7PhoneFocus() {
+
+    // 隐藏Page7原来的背景
+    page7.style.display =
+        "none";
+
+    // 隐藏Page7剧情文字
+    page7Dialog.style.display =
+        "none";
+
+    // 隐藏Page7原来的手机点击热区
+    page7PhoneHit.style.display =
+        "none";
+
+    // 显示手机特写画面
+    page7PhoneFocus.style.display =
+        "block";
+    // 显示手机屏幕上的通知弹窗
+    page7Notification.style.display =
+        "block";
+    // 显示通知弹窗的红色测试热区
+    page7NotificationHit.style.display =
+        "block";
+}
+
+// 显示Page8 Sweet Shop App首页
+function showPage8() {
+
+    // 立即隐藏手机特写画面
+    page7PhoneFocus.style.display =
+        "none";
+
+    // 立即隐藏通知弹窗
+    page7Notification.style.display =
+        "none";
+
+    // 立即隐藏通知弹窗点击热区
+    page7NotificationHit.style.display =
+        "none";
+
+    // 立即显示Page8 App首页
+    page8.style.display =
+        "block";
+
+    // 清除可能残留的Page8故障计时器
+    clearTimeout(
+        page8GlitchStartTimer
+    );
+
+    clearTimeout(
+        page8GlitchTimer
+    );
+
+    // 每次进入Page8时，先隐藏故障图层
+    "none";
+
+    // Page8正常显示1800ms后，自动开始故障动画
+    page8GlitchStartTimer =
+        setTimeout(
+            () => {
+
+                playPage8GlitchSequence();
+
+            },
+            800
+        );
+}
+
+// 播放Page8故障图片序列
+function playPage8GlitchSequence() {
+
+    // 停止可能残留的故障动画计时器
+    clearTimeout(
+        page8GlitchTimer
+    );
+
+    // 每次播放都从第一张故障图开始
+    page8GlitchIndex = 0;
+
+    // 显示故障序列图层
+    page8GlitchFrame.style.display =
+        "block";
+
+    // 显示当前故障状态图
+    function showNextPage8GlitchFrame() {
+
+        // 所有状态图播放完成后，停留在最终故障画面
+        if (
+            page8GlitchIndex >=
+            page8GlitchSequence.length
+        ) {
+
+            page8GlitchTimer = null;
+
+            // Page8故障序列结束后，先显示横屏提示页｜函数定义于 platformer.js
+            showPage8RotateHint();
+
+            return;
+        }
+
+        // 获取当前需要显示的图片和停留时间
+        const currentGlitchFrame =
+            page8GlitchSequence[
+            page8GlitchIndex
+            ];
+
+        // 切换为当前故障图片
+        page8GlitchFrame.src =
+            currentGlitchFrame.src;
+
+        // 当前图片停留结束后，进入下一张
+        page8GlitchTimer =
+            setTimeout(
+                () => {
+
+                    page8GlitchIndex += 1;
+
+                    showNextPage8GlitchFrame();
+
+                },
+                currentGlitchFrame.duration
+            );
+    }
+
+    // 开始播放第一张故障图
+    showNextPage8GlitchFrame();
+}
+
+// 点击手机通知弹窗，进入Page8
+page7NotificationHit.addEventListener(
+    "click",
+    () => {
+
+        // 播放原有的泡泡点击音效
+        playTapSound();
+
+        // 立即隐藏热区，防止连续重复点击
+        page7NotificationHit.style.display =
+            "none";
+
+        // 显示Page8 App首页
+        showPage8();
+    }
+);
+
+// 播放Page6到Page7的纯白淡入淡出转场
+function playPage6ToPage7FadeTransition() {
+
+    // 显示纯白转场层
+    page6Page7WhiteTransition.style.display =
+        "block";
+
+
+    // 清除可能残留的转场动画状态
+    page6Page7WhiteTransition.classList.remove(
+        "white-transition-in"
+    );
+
+    page6Page7WhiteTransition.classList.remove(
+        "white-transition-out"
+    );
+
+
+    // 强制浏览器刷新动画状态
+    page6Page7WhiteTransition.offsetWidth;
+
+
+    // 白色层逐渐覆盖Page6
+    page6Page7WhiteTransition.classList.add(
+        "white-transition-in"
+    );
+
+
+    // 白色完全覆盖后，切换为Page7
+    setTimeout(
+        () => {
+
+            showPage7();
+
+
+            // 从白色逐渐显示Page7
+            page6Page7WhiteTransition.classList.remove(
+                "white-transition-in"
+            );
+
+            page6Page7WhiteTransition.classList.add(
+                "white-transition-out"
+            );
+
+        },
+        500
+    );
+
+
+    // 转场完成后隐藏并重置白色层
+    setTimeout(
+        () => {
+
+            page6Page7WhiteTransition.classList.remove(
+                "white-transition-out"
+            );
+
+            page6Page7WhiteTransition.style.display =
+                "none";
+
+            // Page7完全显示后停顿400ms，再开始逐字显示文案
+            page7TextTimer =
+                setTimeout(
+                    typePage7StoryText,
+                    400
+                );
+
+        },
+        1050
+    );
 }
 
 // 继续购买：重置本轮状态并返回Page1
@@ -421,20 +960,61 @@ function showPage5() {
     // 显示Page5
     page5.style.display = "block";
 
-    // 显示Page5两个按钮图片
-    page5ContinueButton.style.display =
-        "block";
+    // 把本次购入的盲盒也计算进去，判断是否已经集齐6款
+    const allBoxesPurchased =
+        new Set([
+            ...purchasedBoxIndexes,
+            purchasedBoxIndex
+        ]).size === 6;
 
-    page5FinishButton.style.display =
-        "block";
+
+    // 根据是否集齐6款切换Page5按钮
+    if (allBoxesPurchased) {
+
+        // 买满6款：隐藏原来的两个按钮
+        page5ContinueButton.style.display =
+            "none";
+
+        page5FinishButton.style.display =
+            "none";
+
+        page5ContinueHit.style.display =
+            "none";
+
+        page5FinishHit.style.display =
+            "none";
 
 
-    // 显示Page5两个按钮热区
-    page5ContinueHit.style.display =
-        "block";
+        // 显示宽版结束购买按钮和红色测试热区
+        page5FinishFullButton.style.display =
+            "block";
 
-    page5FinishHit.style.display =
-        "block";
+        page5FinishFullHit.style.display =
+            "block";
+
+    } else {
+
+        // 未买满6款：继续显示原来的两个按钮
+        page5ContinueButton.style.display =
+            "block";
+
+        page5FinishButton.style.display =
+            "block";
+
+        page5ContinueHit.style.display =
+            "block";
+
+        page5FinishHit.style.display =
+            "block";
+
+
+        // 隐藏宽版按钮和热区
+        page5FinishFullButton.style.display =
+            "none";
+
+        page5FinishFullHit.style.display =
+            "none";
+    }
 }
 
 // Page5继续购买按钮：记录已购状态并返回Page1
@@ -496,6 +1076,46 @@ page5FinishHit.addEventListener(
 
         // 立即关闭两个热区
         // 防止动画期间重复点击或点击另一个按钮
+        page5ContinueHit.style.display =
+            "none";
+
+        page5FinishHit.style.display =
+            "none";
+
+
+        // 等按钮反馈结束后进入Page6
+        setTimeout(
+            () => {
+
+                showPage6();
+
+            },
+            400
+        );
+    }
+);
+
+// Page5买满6款后的宽版结束购买按钮：进入Page6
+page5FinishFullHit.addEventListener(
+    "click",
+    () => {
+
+        // 播放泡泡点击音效
+        playTapSound();
+
+
+        // 播放宽版按钮的缩放反馈
+        page5ButtonFeedback(
+            page5FinishFullButton
+        );
+
+
+        // 立即关闭宽版热区，防止重复点击
+        page5FinishFullHit.style.display =
+            "none";
+
+
+        // 同时确保原来的两个热区保持关闭
         page5ContinueHit.style.display =
             "none";
 
@@ -915,6 +1535,31 @@ page6.style.display =
     "none";
 
 page6Character.style.display =
+    "none";
+
+// Page7初始状态
+page7.style.display =
+    "none";
+
+page7Dialog.style.display =
+    "none";
+
+page7PhoneHit.style.display =
+    "none";
+
+page7PhoneFocus.style.display =
+    "none";
+
+page7Notification.style.display =
+    "none";
+
+page7NotificationHit.style.display =
+    "none";
+
+page8.style.display =
+    "none";
+
+page8GlitchFrame.style.display =
     "none";
 
 const box = document.getElementById("box");
@@ -1544,6 +2189,140 @@ function playTapSound() {
         tapAudioContext.currentTime + 0.1
     );
 
+}
+
+// ===========================
+// Page7手机“叮咚”通知音
+// ===========================
+
+function playPage7NotificationSound() {
+
+    const AudioContextClass =
+        window.AudioContext ||
+        window.webkitAudioContext;
+
+
+    if (!AudioContextClass) return;
+
+
+    // 与现有按钮和晃动音效共用声音环境
+    if (!tapAudioContext) {
+
+        tapAudioContext =
+            new AudioContextClass();
+
+    }
+
+
+    function createPage7NotificationSound() {
+
+        const currentTime =
+            tapAudioContext.currentTime;
+
+
+        // 创建单独一声提示音
+        function createNotificationTone(
+            frequency,
+            startDelay,
+            duration,
+            volume
+        ) {
+
+            const oscillator =
+                tapAudioContext.createOscillator();
+
+            const gainNode =
+                tapAudioContext.createGain();
+
+
+            oscillator.type =
+                "sine";
+
+            oscillator.frequency.setValueAtTime(
+                frequency,
+                currentTime + startDelay
+            );
+
+
+            // 声音从很轻开始
+            gainNode.gain.setValueAtTime(
+                0.001,
+                currentTime + startDelay
+            );
+
+            // 快速出现
+            gainNode.gain.exponentialRampToValueAtTime(
+                volume,
+                currentTime + startDelay + 0.015
+            );
+
+            // 柔和消失
+            gainNode.gain.exponentialRampToValueAtTime(
+                0.001,
+                currentTime + startDelay + duration
+            );
+
+
+            oscillator.connect(
+                gainNode
+            );
+
+            gainNode.connect(
+                tapAudioContext.destination
+            );
+
+
+            oscillator.start(
+                currentTime + startDelay
+            );
+
+            oscillator.stop(
+                currentTime +
+                startDelay +
+                duration
+            );
+        }
+
+
+        // 第一声“叮”：较高、较短
+        createNotificationTone(
+            800,
+            0,
+            0.22,
+            1
+        );
+
+
+        // 第二声“咚”：稍低、稍长
+        createNotificationTone(
+            660,
+            0.16,
+            0.30,
+            0.70
+        );
+    }
+
+
+    // 兼容手机浏览器暂停声音环境的情况
+    if (
+        tapAudioContext.state ===
+        "suspended"
+    ) {
+
+        tapAudioContext
+            .resume()
+            .then(() => {
+
+                createPage7NotificationSound();
+
+            })
+            .catch(() => { });
+
+    } else {
+
+        createPage7NotificationSound();
+
+    }
 }
 
 // ===========================

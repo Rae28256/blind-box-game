@@ -453,6 +453,14 @@ body {
 
 }
 
+/* 宽版结束购买按钮使用与Page2相同的点击缩放动画 */
+.page5-finish-full-button.page5-button-active {
+
+    animation:
+        buttonPress 0.4s ease;
+
+}
+
 /* ===========================
    Page2 购入按钮
 =========================== */
@@ -776,10 +784,18 @@ body {
 
 }
 
+/* 买满6款后的宽版结束购买按钮缩放中心 */
+.page5-finish-full-button {
 
-/* Page5两个点击热区的共同样式 */
+    transform-origin:
+        196.5px 738px;
+
+}
+
+/* Page5点击热区的共同样式 */
 .page5-continue-hit,
-.page5-finish-hit {
+.page5-finish-hit,
+.page5-finish-full-hit {
 
     position: absolute;
 
@@ -805,6 +821,14 @@ body {
 
 }
 
+/* 六款全部买完后的宽版结束购买热区 */
+.page5-finish-full-hit {
+
+    left: 32px;
+
+    width: 309px;
+
+}
 
 /* 结束购买热区 */
 .page5-finish-hit {
@@ -854,4 +878,299 @@ body {
 
     pointer-events: none;
 
+}
+
+/* Page7回家场景背景 */
+.page7-bg {
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+
+    object-fit: contain;
+
+    /* Page7显示在Page6上方 */
+    z-index: 92;
+
+    pointer-events: none;
+
+}
+
+/* Page7逐字显示的剧情文字 */
+.page7-dialog {
+
+    position: absolute;
+
+    left: 30px;
+    bottom: 40px;
+
+    width: 315px;
+    height: 72px;
+
+    box-sizing: border-box;
+
+    padding:
+        14px 20px;
+
+    color:
+        #6676B7;
+
+    font-size: 15px;
+    line-height: 24px;
+
+    text-align: left;
+
+    /* 保留JavaScript文案中的换行 */
+    white-space: pre-line;
+
+    /* 防止文字超出文本框 */
+    overflow: hidden;
+
+    /* 显示在Page7背景上方 */
+    z-index: 93;
+
+    pointer-events: none;
+
+}
+
+/* Page7手机点击热区 */
+.page7-phone-hit {
+
+    position: absolute;
+
+    left: 214px;
+    top: 189px;
+
+    width: 64px;
+    height: 77px;
+
+    /* 红色测试效果，后续统一改为透明 */
+    background:
+        rgba(255, 0, 0, 0.35);
+
+    /* 显示在Page7背景和文字上方 */
+    z-index: 94;
+
+    cursor: pointer;
+
+    /* 防止手机端点击时触发页面滚动 */
+    touch-action: none;
+
+}
+
+/* Page7文案结束后出现的手机特写画面 */
+.page7-phone-focus {
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+
+    object-fit: contain;
+
+    /* 显示在Page7背景和剧情文字上方 */
+    z-index: 95;
+
+    /* 手机特写画面本身暂时不接收点击 */
+    pointer-events: none;
+
+}
+
+/* 手机特写画面上的通知弹窗 */
+.page7-notification {
+
+    position: absolute;
+
+    /* 与375×812的手机特写背景完全重叠 */
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+
+    object-fit: contain;
+
+    /* 显示在手机特写背景上方 */
+    z-index: 96;
+
+    /* 图片本身暂时不拦截点击 */
+    pointer-events: none;
+
+    /* 弹窗中心：左下角坐标（188，376），转换为CSS坐标（188，436） */
+    transform-origin: 188px 436px;
+
+    /* 持续进行没有停顿的呼吸缩放 */
+    animation:
+        page7NotificationBreath 1.4s ease-in-out infinite;
+}
+
+/* Page7手机通知弹窗点击热区 */
+.page7-notification-hit {
+
+    position: absolute;
+
+    /*
+     * 左下角坐标：
+     * 左上角（121，387）
+     * 右下角（257，350）
+     *
+     * 转换后的CSS坐标：
+     */
+    left: 121px;
+    top: 425px;
+
+    width: 136px;
+    height: 37px;
+
+    /* 红色测试效果，确认位置后再改为透明 */
+    background:
+        rgba(255, 0, 0, 0.35);
+
+    /* 位于通知图片上方、Page8下方 */
+    z-index: 97;
+
+    cursor: pointer;
+
+    /* 防止手机触摸时拖动页面 */
+    touch-action: none;
+}
+
+/* Page8 Sweet Shop App首页 */
+.page8-bg {
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+
+    object-fit: contain;
+
+    /* 显示在手机特写画面和通知弹窗上方 */
+    z-index: 98;
+
+    /* Page8背景暂时不接收点击 */
+    pointer-events: none;
+}
+
+/* Page8故障动画序列图层 */
+.page8-glitch-frame {
+
+    position: absolute;
+
+    /* 与375×812的Page8背景完全重叠 */
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+
+    object-fit: contain;
+
+    /* 显示在正常Page8首页的上方 */
+    z-index: 99;
+
+    /* 故障动画过程中不接收点击 */
+    pointer-events: none;
+}
+
+/* Page6进入Page7的纯白转场层 */
+.page6-page7-white-transition {
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+
+    background:
+        #FFFFFF;
+
+    /* 默认完全透明 */
+    opacity: 0;
+
+    /* 覆盖Page1、Page6、Page7及剧情文字 */
+    z-index: 100;
+
+    pointer-events: none;
+
+    will-change: opacity;
+
+}
+
+/* 白色转场层逐渐覆盖Page6 */
+.page6-page7-white-transition.white-transition-in {
+
+    animation:
+        whiteTransitionIn 0.35s ease forwards;
+
+}
+
+
+/* 白色转场层逐渐消失并显示Page7 */
+.page6-page7-white-transition.white-transition-out {
+
+    animation:
+        whiteTransitionOut 0.55s ease forwards;
+
+}
+
+
+/* 从透明逐渐变成纯白 */
+@keyframes whiteTransitionIn {
+
+    0% {
+
+        opacity: 0;
+
+    }
+
+    100% {
+
+        opacity: 1;
+
+    }
+
+}
+
+
+/* 从纯白逐渐变回透明 */
+@keyframes whiteTransitionOut {
+
+    0% {
+
+        opacity: 1;
+
+    }
+
+    100% {
+
+        opacity: 0;
+
+    }
+
+}
+
+/* Page7通知弹窗的呼吸缩放动画 */
+@keyframes page7NotificationBreath {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
 }

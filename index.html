@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finger Demo</title>
     <link rel="stylesheet" href="style.css?v=29071201">
+    <link rel="stylesheet" href="platformer.css">
 </head>
 
 <body>
@@ -124,17 +125,77 @@
         <img src="images/page5_finish.png" class="page5-button page5-finish-button" id="page5FinishButton"
             style="display: none;">
 
+        <!-- Page5六款全部买完后的宽版结束购买按钮 -->
+        <img src="images/page5_finish_full.png" class="page5-button page5-finish-full-button" id="page5FinishFullButton"
+            style="display: none;">
+
         <!-- Page5继续购买透明热区 -->
         <div class="page5-continue-hit" id="page5ContinueHit" style="display: none;"></div>
 
         <!-- Page5结束购买透明热区 -->
         <div class="page5-finish-hit" id="page5FinishHit" style="display: none;"></div>
 
+        <!-- Page5六款全部买完后的宽版结束购买热区 -->
+        <div class="page5-finish-full-hit" id="page5FinishFullHit" style="display: none;"></div>
+
         <!-- Page6静态背景，默认隐藏 -->
         <img src="images/page6_bg.png" class="page6-bg" id="page6" style="display: none;">
 
         <!-- Page6小人序列帧，默认显示第00帧并保持隐藏 -->
         <img src="images/page6_character_00.png" class="page6-character" id="page6Character" style="display: none;">
+
+        <!-- Page7回家场景背景，默认隐藏 -->
+        <img src="images/page7_bg.png" class="page7-bg" id="page7" style="display: none;">
+
+        <!-- Page7逐字显示的剧情文字 -->
+        <div class="page7-dialog" id="page7Dialog" style="display: none;"></div>
+
+        <!-- Page7手机点击热区，默认隐藏 -->
+        <div class="page7-phone-hit" id="page7PhoneHit" style="display: none;"></div>
+
+        <!-- Page7文案结束后出现的手机特写画面，默认隐藏 -->
+        <img src="images/page7_phone_focus.png" class="page7-phone-focus" id="page7PhoneFocus" style="display: none;">
+
+        <!-- 手机特写画面上的通知弹窗，默认隐藏 -->
+        <img src="images/page7_notification.png" class="page7-notification" id="page7Notification"
+            style="display: none;">
+
+        <!-- 手机通知弹窗点击热区，默认隐藏 -->
+        <div class="page7-notification-hit" id="page7NotificationHit" style="display: none;"></div>
+
+        <!-- Page8 Sweet Shop App首页，默认隐藏 -->
+        <img src="images/page8_bg.png" class="page8-bg" id="page8" style="display: none;">
+
+        <!-- Page8故障序列图层，播放时通过JavaScript更换图片 -->
+        <img src="images/page8_glitch_01.png" class="page8-glitch-frame" id="page8GlitchFrame" style="display: none;">
+
+        <!-- 横屏提示页容器｜样式：platformer.css｜逻辑：platformer.js｜默认隐藏 -->
+        <div class="page8-rotate-hint" id="page8RotateHint" style="display: none;">
+            <!-- 横屏提示页背景｜文件：images/page8_rotate_bg.png -->
+            <img src="images/page8_rotate_bg.png" class="page8-rotate-bg" id="page8RotateBg" alt="">
+
+            <!-- 横屏旋转手机图标｜文件：images/page8_rotate_phone.png｜375 × 812 透明底 -->
+            <img src="images/page8_rotate_phone.png" class="page8-rotate-phone" id="page8RotatePhone" alt="">
+
+            <!-- 横屏提示文字｜由代码显示，不写入图片素材 -->
+            <div class="page8-rotate-text" id="page8RotateText">
+                <p class="page8-rotate-text-main">关闭屏幕方向锁定</p>
+                <p class="page8-rotate-text-sub">横向旋转手机，进入购物挑战</p>
+            </div>
+        </div>
+
+        <!-- 横版小游戏场景容器｜样式：platformer.css｜逻辑：platformer.js｜默认隐藏 -->
+        <div class="platformer-scene" id="platformerScene" style="display: none;">
+            <!-- 横版游戏初始背景｜文件：images/platformer/platformer_bg.png -->
+            <img src="images/platformer/platformer_bg.png" class="platformer-bg" id="platformerBg" alt="">
+
+            <!-- 横版游戏人物｜文件：images/platformer/platformer_player.png -->
+            <img src="images/platformer/platformer_player.png" class="platformer-player" id="platformerPlayer" alt="">
+
+        </div>
+
+        <!-- Page6进入Page7的纯白淡入淡出转场层 -->
+        <div class="page6-page7-white-transition" id="page6Page7WhiteTransition" style="display: none;"></div>
 
         <!-- Page2 返回点击区域 -->
         <div class="page2-back-hit" id="page2Back"></div>
@@ -149,6 +210,7 @@
     </div>
 
     <script src="script.js?v=29071201"></script>
+    <script src="platformer.js"></script>
 
 </body>
 

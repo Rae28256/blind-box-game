@@ -1,0 +1,87 @@
+/* 横版小游戏场景容器｜对应：index.html 的 #platformerScene */
+.platformer-scene {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #5286e7;
+    z-index: 100;
+}
+
+/* 横版游戏初始背景｜文件：images/platformer/platformer_bg.png */
+.platformer-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+/* 横版游戏人物透明图层｜文件：images/platformer/platformer_player.png */
+.platformer-player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* 横屏提示页容器｜对应：index.html 的 #page8RotateHint */
+.page8-rotate-hint {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 101;
+}
+
+/* 横屏提示页背景｜文件：images/page8_rotate_bg.png */
+.page8-rotate-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* 横屏旋转手机图标层｜文件：images/page8_rotate_phone.png｜375 × 812 透明底 */
+.page8-rotate-phone {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 2;
+    pointer-events: none;
+    transform-origin: 60% 50%;
+    animation: page8-phone-rotate 1.6s ease-in-out infinite;
+}
+
+/* 横屏提示中的手机图标左右旋转动效 */
+@keyframes page8-phone-rotate {
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(-16deg);
+    }
+
+    75% {
+        transform: rotate(16deg);
+    }
+}
