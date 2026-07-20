@@ -10,15 +10,72 @@
     z-index: 100;
 }
 
-/* 横版游戏初始背景｜文件：images/platformer/platformer_bg.png */
+/* 横版游戏可移动长背景｜文件：images/platformer/platformer_bg_track.png */
 .platformer-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: 100%;
+    max-width: none;
+    z-index: 1;
+    pointer-events: none;
+    will-change: transform;
+}
+
+/* 横版游戏低位测试商品：小熊保温杯｜文件：images/platformer/platformer_item_cup.png */
+.platformer-item-cup {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    z-index: 1;
+    z-index: 2;
+    pointer-events: none;
+    will-change: transform;
+}
+
+/* 小熊保温杯获取判定区｜当前红色用于检查范围 */
+.platformer-item-cup-zone {
+    position: absolute;
+    top: 260px;
+    left: 460px;
+    width: 50px;
+    height: 60px;
+    z-index: 3;
+    pointer-events: none;
+    box-sizing: border-box;
+    background: rgba(255, 0, 0, 0.28);
+    border: 2px dashed #ff3b3b;
+    will-change: transform;
+}
+
+/* 横版游戏高位商品：Sweet Box｜初始坐标 x=1259，y=60 */
+.platformer-product-sweet-box {
+    position: absolute;
+    top: 60px;
+    left: 1259px;
+    width: 70px;
+    height: 78px;
+    z-index: 2;
+    pointer-events: none;
+    will-change: transform;
+}
+
+/* Sweet Box 获取判定区｜当前红色用于检查高位范围 */
+.platformer-sweet-box-zone {
+    position: absolute;
+    top: 60px;
+    left: 1259px;
+    width: 70px;
+    height: 78px;
+    z-index: 3;
+    pointer-events: none;
+    box-sizing: border-box;
+    background: rgba(255, 0, 0, 0.28);
+    border: 2px dashed #ff3b3b;
+    will-change: transform;
 }
 
 /* 横版游戏人物透明图层｜文件：images/platformer/platformer_player.png */
@@ -31,6 +88,93 @@
     object-fit: cover;
     z-index: 2;
     pointer-events: none;
+    transition: left 1.8s ease-out;
+}
+
+/* 人物商品获取判定区｜当前红色用于检查范围 */
+.platformer-pickup-zone {
+    position: absolute;
+    top: 205px;
+    left: 30px;
+    width: 50px;
+    height: 135px;
+    z-index: 3;
+    pointer-events: none;
+    box-sizing: border-box;
+    background: rgba(255, 0, 0, 0.28);
+    border: 2px dashed #ff3b3b;
+    transition: left 1.8s ease-out;
+}
+
+/* 横版游戏固定顶部状态栏｜文件：images/platformer/platformer_hud.png */
+.platformer-hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 3;
+    pointer-events: none;
+}
+
+/* 横版游戏预算数值｜叠加在粉色预算框内 */
+.platformer-budget-value {
+    position: absolute;
+    top: 19px;
+    right: 160px;
+    width: 64px;
+    z-index: 5;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 26px;
+    text-align: center;
+    pointer-events: none;
+}
+
+/* 横版游戏购物车容量｜叠加在购物车右上角标记内 */
+.platformer-cart-value {
+    position: absolute;
+    top: 13px;
+    right: 18px;
+    width: 31px;
+    z-index: 5;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 18px;
+    text-align: center;
+    pointer-events: none;
+}
+
+/* 横版游戏右下角跳跃按钮｜文件：images/platformer/platformer_jump_button.png */
+.platformer-jump-button {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 4;
+    pointer-events: none;
+}
+
+/* 横版游戏跳跃按钮热区｜当前红色仅用于检查范围 */
+.platformer-jump-hit {
+    position: absolute;
+    right: 22px;
+    bottom: 20px;
+    width: 94px;
+    height: 95px;
+    z-index: 5;
+    cursor: pointer;
+    touch-action: none;
+    background: rgba(255, 0, 0, 0.35);
+    border: 2px solid #ff3b3b;
+    box-sizing: border-box;
 }
 
 /* 横屏提示页容器｜对应：index.html 的 #page8RotateHint */
@@ -72,6 +216,7 @@
 
 /* 横屏提示中的手机图标左右旋转动效 */
 @keyframes page8-phone-rotate {
+
     0%,
     100% {
         transform: rotate(0deg);
@@ -95,22 +240,4 @@
     z-index: 3;
     text-align: center;
     pointer-events: none;
-}
-
-/* 横屏提示主文字：关闭屏幕方向锁定 */
-.page8-rotate-text-main {
-    margin: 0;
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1.4;
-}
-
-/* 横屏提示辅助文字：横向旋转手机，进入购物挑战 */
-.page8-rotate-text-sub {
-    margin: 8px 0 0;
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 1.4;
 }

@@ -169,29 +169,47 @@
         <!-- Page8故障序列图层，播放时通过JavaScript更换图片 -->
         <img src="images/page8_glitch_01.png" class="page8-glitch-frame" id="page8GlitchFrame" style="display: none;">
 
-        <!-- 横屏提示页容器｜样式：platformer.css｜逻辑：platformer.js｜默认隐藏 -->
-        <div class="page8-rotate-hint" id="page8RotateHint" style="display: none;">
-            <!-- 横屏提示页背景｜文件：images/page8_rotate_bg.png -->
-            <img src="images/page8_rotate_bg.png" class="page8-rotate-bg" id="page8RotateBg" alt="">
-
-            <!-- 横屏旋转手机图标｜文件：images/page8_rotate_phone.png｜375 × 812 透明底 -->
-            <img src="images/page8_rotate_phone.png" class="page8-rotate-phone" id="page8RotatePhone" alt="">
-
-            <!-- 横屏提示文字｜由代码显示，不写入图片素材 -->
-            <div class="page8-rotate-text" id="page8RotateText">
-                <p class="page8-rotate-text-main">关闭屏幕方向锁定</p>
-                <p class="page8-rotate-text-sub">横向旋转手机，进入购物挑战</p>
-            </div>
-        </div>
-
         <!-- 横版小游戏场景容器｜样式：platformer.css｜逻辑：platformer.js｜默认隐藏 -->
         <div class="platformer-scene" id="platformerScene" style="display: none;">
-            <!-- 横版游戏初始背景｜文件：images/platformer/platformer_bg.png -->
-            <img src="images/platformer/platformer_bg.png" class="platformer-bg" id="platformerBg" alt="">
+            <!-- 横版游戏可移动长背景｜文件：images/platformer/platformer_bg_track.png -->
+            <img src="images/platformer/platformer_bg_track.png" class="platformer-bg" id="platformerBg" alt="">
 
-            <!-- 横版游戏人物｜文件：images/platformer/platformer_player.png -->
-            <img src="images/platformer/platformer_player.png" class="platformer-player" id="platformerPlayer" alt="">
+            <!-- 横版游戏低位测试商品：小熊保温杯｜文件：images/platformer/platformer_item_cup.png -->
+            <img src="images/platformer/platformer_item_cup.png" class="platformer-item-cup" id="platformerItemCup"
+                alt="">
 
+            <!-- 小熊保温杯获取判定区｜当前红色显示，后续统一改为透明 -->
+            <div class="platformer-item-cup-zone" id="platformerItemCupZone"></div>
+
+            <!-- 横版游戏高位商品：Sweet Box｜文件：images/platformer/platformer_product_sweet_box.png -->
+            <img src="images/platformer/platformer_product_sweet_box.png" class="platformer-product-sweet-box"
+                id="platformerProductSweetBox" alt="">
+
+            <!-- Sweet Box 获取判定区｜当前红色显示，后续统一改为透明 -->
+            <div class="platformer-sweet-box-zone" id="platformerSweetBoxZone"></div>
+
+            <!-- 横版游戏人物｜四帧图片由 platformer.js 自动切换 -->
+            <img src="images/platformer/platformer_player_run_01.png" class="platformer-player" id="platformerPlayer"
+                alt="">
+
+            <!-- 人物商品获取判定区｜当前红色显示，后续统一改为透明 -->
+            <div class="platformer-pickup-zone" id="platformerPickupZone"></div>
+
+            <!-- 横版游戏固定顶部状态栏｜文件：images/platformer/platformer_hud.png -->
+            <img src="images/platformer/platformer_hud.png" class="platformer-hud" id="platformerHud" alt="">
+
+            <!-- 横版游戏初始预算文字｜后续购买时由 JavaScript 更新 -->
+            <span class="platformer-budget-value" id="platformerBudgetValue">¥ 300</span>
+
+            <!-- 横版游戏初始购物车容量｜后续购买时由 JavaScript 更新 -->
+            <span class="platformer-cart-value" id="platformerCartValue">0/6</span>
+
+            <!-- 横版游戏右下角跳跃按钮｜文件：images/platformer/platformer_jump_button.png -->
+            <img src="images/platformer/platformer_jump_button.png" class="platformer-jump-button"
+                id="platformerJumpButton" alt="">
+
+            <!-- 横版游戏跳跃按钮热区｜当前以红色显示，后续统一改为透明 -->
+            <div class="platformer-jump-hit" id="platformerJumpHit"></div>
         </div>
 
         <!-- Page6进入Page7的纯白淡入淡出转场层 -->

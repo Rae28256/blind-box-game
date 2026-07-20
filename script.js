@@ -630,8 +630,8 @@ function playPage8GlitchSequence() {
 
             page8GlitchTimer = null;
 
-            // Page8故障序列结束后，先显示横屏提示页｜函数定义于 platformer.js
-            showPage8RotateHint();
+            // Page8故障序列结束后，直接进入电脑端横版小游戏｜函数定义于 platformer.js
+            showPlatformerScene();
 
             return;
         }
